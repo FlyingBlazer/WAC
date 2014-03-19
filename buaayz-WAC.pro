@@ -28,5 +28,6 @@ MOBILITY =
 OTHER_FILES += \
     .gitignore \
     LICENSE \
-    README.md
+    README.md \
+    QtApp-debug.apk
 
