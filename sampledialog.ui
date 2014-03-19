@@ -15,12 +15,15 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>大声告诉我我们的吉祥物是什么？</string>
+    <widget class="QTextBrowser" name="textBrowser">
+     <property name="textInteractionFlags">
+      <set>Qt::NoTextInteraction</set>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
+     <property name="openExternalLinks">
+      <bool>false</bool>
+     </property>
+     <property name="openLinks">
+      <bool>false</bool>
      </property>
     </widget>
    </item>

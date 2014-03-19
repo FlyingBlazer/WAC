@@ -29,5 +29,5 @@ OTHER_FILES += \
     .gitignore \
     LICENSE \
     README.md \
-    QtApp-debug.apk
+    WAC.apk
 

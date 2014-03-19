@@ -20,10 +20,10 @@ SampleDialog::~SampleDialog()
 
 void SampleDialog::on_pushButton_2_clicked()
 {
-    QNetworkRequest request(QUrl("https://wac-songziming.rhcloud.com/wtf/"));
+    QNetworkRequest request(QUrl("https://wac-songziming.rhcloud.com/"));
     QNetworkReply *reply=manager.get(request);
     QEventLoop loop;
-    connect(&manager,&QNetworkAccessManager::finished,[&loop](){loop.exit();qDebug("finished!");});
+    connect(&manager,&QNetworkAccessManager::finished,[&loop](){loop.exit();});
     loop.exec();
-    ui->label->setText(QString(reply->readAll()));
+    ui->textBrowser->setHtml(QString(reply->readAll()));
 }
