@@ -23,7 +23,7 @@ private slots:
 
 private:
     Ui::SampleDialog *ui;
-    QNetworkAccessManager manager;
+    QNetworkAccessManager NAM;
 };
 
 #endif // SAMPLEDIALOG_H

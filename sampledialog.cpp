@@ -1,5 +1,6 @@
 #include "sampledialog.h"
 #include "ui_sampledialog.h"
+#include "settings.h"
 #include <QEventLoop>
 #include <QDesktopWidget>
 
@@ -20,10 +21,14 @@ SampleDialog::~SampleDialog()
 
 void SampleDialog::on_pushButton_2_clicked()
 {
-    QNetworkRequest request(QUrl("https://wac-songziming.rhcloud.com/"));
-    QNetworkReply *reply=manager.get(request);
+    QByteArray postData;
+    postData.append("magic=").append(ui->lineEdit->text());
+    QNetworkRequest request(QUrl("https://wac-wantacar.rhcloud.com/api"));
+    request.setRawHeader("Content-Type","application/x-www-form-urlencoded");
+    QNetworkReply *reply=NAM.post(request,postData);
     QEventLoop loop;
-    connect(&manager,&QNetworkAccessManager::finished,[&loop](){loop.exit();});
+    QMetaObject::Connection a=connect(&NAM,&QNetworkAccessManager::finished,[&loop](){loop.exit();});
     loop.exec();
-    ui->textBrowser->setHtml(QString(reply->readAll()));
+    ui->textBrowser->setText(QString(reply->readAll()));
+    NAM.disconnect(a);
 }

@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "sampledialog.h"
+#include "sign.h"
+#include "login.h"
+#include "settings.h"
 #include <QDesktopWidget>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -22,4 +25,16 @@ void MainWindow::on_pushButton_clicked()
 {
     SampleDialog dialog;
     dialog.exec();
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    Sign a;
+    a.exec();
+}
+
+void MainWindow::on_pushButton_3_clicked()
+{
+    Login a;
+    a.exec();
 }
