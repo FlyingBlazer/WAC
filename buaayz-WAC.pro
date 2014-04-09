@@ -37,7 +37,6 @@ MOBILITY =
 
 OTHER_FILES += \
     .gitignore \
-    LICENSE \
     README.md \
     android/AndroidManifest.xml
 
