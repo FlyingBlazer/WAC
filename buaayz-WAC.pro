@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network
+QT       += core gui network androidextras
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -18,14 +18,16 @@ SOURCES += main.cpp\
     sign.cpp \
     settings.cpp \
     login.cpp \
-    clientinfo.cpp
+    clientinfo.cpp \
+    utils.cpp
 
 HEADERS  += mainwindow.h \
     sampledialog.h \
     sign.h \
     login.h \
     settings.h \
-    clientinfo.h
+    clientinfo.h \
+    utils.h
 
 FORMS    += mainwindow.ui \
     sampledialog.ui \

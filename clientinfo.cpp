@@ -6,6 +6,11 @@
 ClientInfo::ClientInfo(QObject *parent) :
     QObject(parent)
 {
+    if(!QFile::exists(getExternalStorageDirectory()+"/WAC/user.dat"))
+        State=NotLogin;
+    Data.setFileName(getExternalStorageDirectory()+"/WAC/user.dat");
+    Data.open(QIODevice::ReadWrite);
+    readFromFile();
 }
 
 ClientInfo::LoginState ClientInfo::getLoginState()
@@ -17,6 +22,7 @@ void ClientInfo::setUid(long id)
 {
     uid=id;
     refresh();
+    saveToFile();
 }
 
 QPixmap ClientInfo::getAvatar() const
@@ -73,6 +79,28 @@ void ClientInfo::setClientInfo(QNetworkReply *reply)
     QJsonObject JObj=QJsonDocument::fromJson(raw).object();
     Name=JObj["Name"].toString();
     Nickname=JObj["Nickname"].toString();
+    AvatarBase64=JObj["Avatar"].toString().toLocal8Bit();
     Avatar.loadFromData(QByteArray::fromBase64(JObj["Avatar"].toString().toLocal8Bit()));
     emit finished();
+}
+
+void ClientInfo::readFromFile()
+{
+    QByteArray data=QByteArray::fromBase64(Data.readAll());
+    QJsonObject JObj=QJsonDocument::fromJson(data).object();
+    Name=JObj["Name"].toString();
+    Nickname=JObj["Nickname"].toString();
+    AvatarBase64=JObj["Avatar"].toString().toLocal8Bit();
+    Avatar.loadFromData(QByteArray::fromBase64(JObj["Avatar"].toString().toLocal8Bit()));
+    State=HasLogin;
+}
+
+void ClientInfo::saveToFile()
+{
+    QJsonObject JObj;
+    JObj.insert("Name",QJsonValue(Name));
+    JObj.insert("NickName",QJsonValue(Nickname));
+    JObj.insert("Avatar",QJsonValue(QString(AvatarBase64.toBase64())));
+    QByteArray d=QJsonDocument(JObj).toJson();
+    Data.write(d);
 }

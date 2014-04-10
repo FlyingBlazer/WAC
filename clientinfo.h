@@ -2,10 +2,12 @@
 #define CLIENTINFO_H
 
 #include "settings.h"
+#include "utils.h"
 #include <QObject>
 #include <QPixmap>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QFile>
 
 class ClientInfo : public QObject
 {
@@ -44,6 +46,12 @@ private:
     QString Name;
     QString Nickname;
     QPixmap Avatar;
+    QByteArray AvatarBase64;
+
+    QFile Data;
+
+    void saveToFile();
+    void readFromFile();
 
 private slots:
     void setClientInfo(QNetworkReply *);
