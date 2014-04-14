@@ -40,9 +40,11 @@ MOBILITY =
 OTHER_FILES += \
     .gitignore \
     README.md \
-    android/AndroidManifest.xml
+    android/AndroidManifest.xml \
+    android/res/drawable-hdpi/icon.png \
+    android/res/drawable-ldpi/icon.png \
+    android/res/drawable-mdpi/icon.png
 
-RESOURCES += \
-    res.qrc
+RESOURCES +=
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
