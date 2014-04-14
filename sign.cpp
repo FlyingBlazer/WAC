@@ -5,10 +5,9 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QDesktopWidget>
-#include <QtDebug>
-#include <QMovie>
 #include <QFile>
-#include <QImageReader>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 Sign::Sign(QWidget *parent) :
     QDialog(parent),ui(new Ui::Sign)
@@ -16,7 +15,6 @@ Sign::Sign(QWidget *parent) :
     ui->setupUi(this);
     QRect applicationGeometry=QApplication::desktop()->availableGeometry();
     this->setFixedSize(applicationGeometry.size());
-    readCheckCode();
 }
 
 Sign::~Sign()
@@ -24,22 +22,8 @@ Sign::~Sign()
     delete ui;
 }
 
-void Sign::readCheckCode()
+QByteArray Sign::signUp(const QString &username,const QString &password,const QString &email)
 {
-    CheckCode.load(":/um.png");
-    qDebug() << CheckCode.size();
-    ui->checkcode->setPixmap(CheckCode);
-    qDebug() << CheckCode.size();
-    this->Code="0000";
-}
-
-bool Sign::signUp(QString username,QString password)
-{
-    static int i=0;
-    if(i++%2==0)
-        return true;
-    else
-        return false;
     QNetworkRequest request(QUrl(Settings::SignPage));
     request.setRawHeader("Content-Type","application/x-www-form-urlencoded");
 //    request.setRawHeader("Accept","text/html,application/xhtml+xml,"
@@ -50,7 +34,7 @@ bool Sign::signUp(QString username,QString password)
     QByteArray postData;
     postData.append("username=").append(username).append("&password=")
             .append(QCryptographicHash::hash(password.toLatin1(),QCryptographicHash::Md5))
-            .append("&magic=").append(Settings::Magic);
+            .append("&email=").append(email).append("&magic=").append(Settings::Magic);
 
     NAM.post(request,postData);
 
@@ -72,12 +56,9 @@ bool Sign::signUp(QString username,QString password)
     NAM.disconnect(a);
     reply->disconnect(b);
 
-    QString response(reply->readAll());
+    QByteArray response=reply->readAll();
     reply->deleteLater();
-    if(response=="ok")
-        return true;
-    else
-        return false;
+    return response;
 }
 
 void Sign::on_acceptButton_clicked()
@@ -85,22 +66,19 @@ void Sign::on_acceptButton_clicked()
     QString username=ui->usernameEdit->text(),
             password=ui->passwordEdit->text(),
             confirmpass=ui->confirmPasswordEdit->text(),
-            checkcode=ui->checkcodeEdit->text();
-    if(checkcode!=this->Code)
-    {
-        QMessageBox::warning(this,"Error","验证码错误");
-        return;
-    }
+            email=ui->emailEdit->text();
     if(password!=confirmpass)
     {
         QMessageBox::warning(this,"Error","密码输入错误");
         return;
     }
-    if(!signUp(username,password))
+    QByteArray response=signUp(username,password,email);
+    QJsonObject JObj=QJsonDocument::fromJson(response).object();
+    if(JObj["status"].toString()!="ok")
     {
-        QMessageBox::warning(this,"Error","注册失败");
+        QMessageBox::warning(this,"注册失败",JObj["msg"].toString());
         return;
     }
-    QMessageBox::information(this,"Succeed","注册成功");
+    QMessageBox::information(this,"注册成功",JObj["msg"].toString());
     accept();
 }

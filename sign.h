@@ -23,11 +23,8 @@ private slots:
 
 private:
     Ui::Sign *ui;
-    QString Code;
-    QPixmap CheckCode;
     QNetworkAccessManager NAM;
-    bool signUp(QString username,QString password);
-    void readCheckCode();
+    QByteArray signUp(const QString &username, const QString &password, const QString &email);
 };
 
 #endif // SIGN_H

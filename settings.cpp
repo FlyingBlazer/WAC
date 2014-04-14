@@ -4,7 +4,9 @@ QString Settings::Domain="https://wac-wantacar.rhcloud.com";
 
 QString Settings::LoginPage=Settings::Domain+"/login";
 
-QString Settings::SignPage=Settings::Domain+"/sign";
+QString Settings::LogoutPage=Settings::Domain+"/logout";
+
+QString Settings::SignPage=Settings::Domain+"/register";
 
 QString Settings::Magic="HowAreYou";
 

@@ -32,6 +32,9 @@ public:
     QPixmap getAvatar() const;
     void setAvatar(const QPixmap &value);
 
+    QString getToken() const;
+    void setToken(const QString &value);
+
 public slots:
     void refresh();
     void setUid(long);
@@ -45,6 +48,7 @@ private:
     long uid;
     QString Name;
     QString Nickname;
+    QString Token;
     QPixmap Avatar;
     QByteArray AvatarBase64;
 

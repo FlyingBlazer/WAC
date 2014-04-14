@@ -10,6 +10,7 @@ public:
 
     static QString Domain;
     static QString LoginPage;
+    static QString LogoutPage;
     static QString SignPage;
     static QString Magic;
     static QString ClientInfoPage;

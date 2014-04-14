@@ -6,6 +6,8 @@
 #include <QNetworkReply>
 #include <QMessageBox>
 #include <QDesktopWidget>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 Login::Login(QWidget *parent) :
     QDialog(parent),
@@ -21,10 +23,8 @@ Login::~Login()
     delete ui;
 }
 
-void Login::on_loginButton_clicked()
+QByteArray Login::login(QString username, QString password)
 {
-    QString username=ui->UserNameEdit->text();
-    QString password=ui->PasswordEdit->text();
     QNetworkRequest request(QUrl(Settings::LoginPage));
     request.setRawHeader("Content-Type","application/x-www-form-urlencoded");
 //    request.setRawHeader("Accept","text/html,application/xhtml+xml,"
@@ -57,11 +57,22 @@ void Login::on_loginButton_clicked()
     NAM.disconnect(a);
     reply->disconnect(b);
 
-    QString response(reply->readAll());
+    QByteArray response=reply->readAll();
     reply->deleteLater();
+    return response;
+}
 
-    if(response=="false")
-        QMessageBox::warning(this,"Error","登录失败");
-    else
-        this->accept();
+void Login::on_loginButton_clicked()
+{
+    QString username=ui->UserNameEdit->text();
+    QString password=ui->PasswordEdit->text();
+    QByteArray response=login(username,password);
+    QJsonObject JObj=QJsonDocument::fromJson(response).object();
+    if(JObj["status"].toString()!="ok")
+    {
+        QMessageBox::warning(this,"登录失败",JObj["msg"].toString());
+        return;
+    } else {
+        QMessageBox::information(this,"登陆成功",JObj["token"].toString());
+    }
 }

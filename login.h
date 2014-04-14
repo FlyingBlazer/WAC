@@ -22,6 +22,8 @@ private slots:
 private:
     Ui::Login *ui;
     QNetworkAccessManager NAM;
+
+    QByteArray login(QString username,QString password);
 };
 
 #endif // LOGIN_H

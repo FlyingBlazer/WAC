@@ -12,6 +12,7 @@ SampleDialog::SampleDialog(QWidget *parent) :
     QRect applicationGeometry=QApplication::desktop()->availableGeometry();
     this->setFixedHeight(applicationGeometry.height());
     this->setFixedWidth(applicationGeometry.width());
+    ui->textBrowser->viewport()->setAttribute(Qt::WA_AcceptTouchEvents);
 }
 
 SampleDialog::~SampleDialog()
@@ -21,6 +22,15 @@ SampleDialog::~SampleDialog()
 
 void SampleDialog::on_pushButton_2_clicked()
 {
+    QNetworkRequest request1(QUrl("https://wac-wantacar.rhcloud.com/doc.html"));
+    QNetworkReply *reply1=NAM.get(request1);
+    QEventLoop loop1;
+    QMetaObject::Connection a1=connect(&NAM,&QNetworkAccessManager::finished,[&loop1](){loop1.exit();});
+    loop1.exec();
+    ui->textBrowser->setText(QString(reply1->readAll()));
+    NAM.disconnect(a1);
+    return;
+
     QByteArray postData;
     postData.append("magic=").append(ui->lineEdit->text());
     QNetworkRequest request(QUrl("https://wac-wantacar.rhcloud.com/api"));

@@ -25,6 +25,16 @@ void ClientInfo::setUid(long id)
     saveToFile();
 }
 
+QString ClientInfo::getToken() const
+{
+    return Token;
+}
+
+void ClientInfo::setToken(const QString &value)
+{
+    Token = value;
+}
+
 QPixmap ClientInfo::getAvatar() const
 {
     return Avatar;
