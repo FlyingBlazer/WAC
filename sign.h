@@ -18,6 +18,9 @@ public:
     explicit Sign(QWidget *parent = 0);
     ~Sign();
 
+signals:
+    void succeed();
+
 private slots:
     void on_acceptButton_clicked();
 

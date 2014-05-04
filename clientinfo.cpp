@@ -1,16 +1,60 @@
 #include "clientinfo.h"
+#include "clientinfocollector.h"
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QNetworkRequest>
+
+ClientInfo ClientInfo::Instance;
+
+ClientInfo &ClientInfo::getInstance()
+{
+    return Instance;
+}
+
+ClientInfo &ClientInfo::newClient(QString username, QString email, QString token)
+{
+    Instance.Name=username;
+    Instance.Email=email;
+    Instance.Token=token;
+    Instance.inputClientInfo();
+    Instance.saveToFile();
+    return Instance;
+}
 
 ClientInfo::ClientInfo(QObject *parent) :
     QObject(parent)
 {
     if(!QFile::exists(getExternalStorageDirectory()+"/WAC/user.dat"))
+    {
+        Data.setFileName(getExternalStorageDirectory()+"/WAC/user.dat");
+        Data.open(QIODevice::ReadWrite);
         State=NotLogin;
+        return;
+    }
     Data.setFileName(getExternalStorageDirectory()+"/WAC/user.dat");
     Data.open(QIODevice::ReadWrite);
     readFromFile();
+}
+
+QByteArray ClientInfo::getAvatarBase64() const
+{
+    return AvatarBase64;
+}
+
+void ClientInfo::setAvatarBase64(const QByteArray &value)
+{
+    AvatarBase64 = value;
+}
+
+
+QString ClientInfo::getEmail() const
+{
+    return Email;
+}
+
+void ClientInfo::setEmail(const QString &value)
+{
+    Email = value;
 }
 
 ClientInfo::LoginState ClientInfo::getLoginState()
@@ -33,16 +77,6 @@ QString ClientInfo::getToken() const
 void ClientInfo::setToken(const QString &value)
 {
     Token = value;
-}
-
-QPixmap ClientInfo::getAvatar() const
-{
-    return Avatar;
-}
-
-void ClientInfo::setAvatar(const QPixmap &value)
-{
-    Avatar = value;
 }
 
 QString ClientInfo::getNickname() const
@@ -80,7 +114,7 @@ void ClientInfo::refresh()
             .append("&magic=").append(Settings::Magic);
     NAM.post(request,postData);
 
-    connect(&NAM,&QNetworkAccessManager::finished,this,&ClientInfo::getAvatar);
+    connect(&NAM,&QNetworkAccessManager::finished,this,&ClientInfo::setClientInfo);
 }
 
 void ClientInfo::setClientInfo(QNetworkReply *reply)
@@ -90,7 +124,6 @@ void ClientInfo::setClientInfo(QNetworkReply *reply)
     Name=JObj["Name"].toString();
     Nickname=JObj["Nickname"].toString();
     AvatarBase64=JObj["Avatar"].toString().toLocal8Bit();
-    Avatar.loadFromData(QByteArray::fromBase64(JObj["Avatar"].toString().toLocal8Bit()));
     emit finished();
 }
 
@@ -101,7 +134,6 @@ void ClientInfo::readFromFile()
     Name=JObj["Name"].toString();
     Nickname=JObj["Nickname"].toString();
     AvatarBase64=JObj["Avatar"].toString().toLocal8Bit();
-    Avatar.loadFromData(QByteArray::fromBase64(JObj["Avatar"].toString().toLocal8Bit()));
     State=HasLogin;
 }
 
@@ -113,4 +145,14 @@ void ClientInfo::saveToFile()
     JObj.insert("Avatar",QJsonValue(QString(AvatarBase64.toBase64())));
     QByteArray d=QJsonDocument(JObj).toJson();
     Data.write(d);
+}
+
+void ClientInfo::inputClientInfo()
+{
+    ClientInfoCollector cic;
+    connect(&cic,&ClientInfoCollector::data,[this](QString nickname,QByteArray picdata){
+        Nickname=nickname;
+        AvatarBase64=picdata;
+    });
+    cic.exec();
 }

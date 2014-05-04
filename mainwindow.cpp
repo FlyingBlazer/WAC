@@ -30,6 +30,7 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::on_pushButton_2_clicked()
 {
     Sign a;
+    connect(&a,&Sign::succeed,this,&MainWindow::on_pushButton_3_clicked);
     a.exec();
 }
 

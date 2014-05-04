@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     settings.cpp \
     login.cpp \
     clientinfo.cpp \
-    utils.cpp
+    utils.cpp \
+    clientinfocollector.cpp
 
 HEADERS  += mainwindow.h \
     sampledialog.h \
@@ -27,12 +28,14 @@ HEADERS  += mainwindow.h \
     login.h \
     settings.h \
     clientinfo.h \
-    utils.h
+    utils.h \
+    clientinfocollector.h
 
 FORMS    += mainwindow.ui \
     sampledialog.ui \
     sign.ui \
-    login.ui
+    login.ui \
+    clientinfocollector.ui
 
 CONFIG += mobility
 MOBILITY = 

@@ -1,6 +1,7 @@
 #include "sign.h"
 #include "ui_sign.h"
 #include "settings.h"
+#include "clientinfo.h"
 #include <QMessageBox>
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -80,5 +81,6 @@ void Sign::on_acceptButton_clicked()
         return;
     }
     QMessageBox::information(this,"注册成功",JObj["msg"].toString());
+    emit succeed();
     accept();
 }

@@ -28,7 +28,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    ClientInfo CInfo;
 
 };
 

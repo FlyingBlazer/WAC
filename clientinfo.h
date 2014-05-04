@@ -13,7 +13,8 @@ class ClientInfo : public QObject
 {
     Q_OBJECT
 public:
-    explicit ClientInfo(QObject *parent = 0);
+    static ClientInfo &getInstance();
+    static ClientInfo &newClient(QString username,QString email,QString token);
 
     enum LoginState
     {
@@ -29,11 +30,14 @@ public:
     QString getNickname() const;
     void setNickname(const QString &value);
 
-    QPixmap getAvatar() const;
-    void setAvatar(const QPixmap &value);
-
     QString getToken() const;
     void setToken(const QString &value);
+
+    QString getEmail() const;
+    void setEmail(const QString &value);
+
+    QByteArray getAvatarBase64() const;
+    void setAvatarBase64(const QByteArray &value);
 
 public slots:
     void refresh();
@@ -43,19 +47,24 @@ signals:
     void finished();
 
 private:
+    static ClientInfo Instance;
+
+    ClientInfo(QObject *parent = 0);
+
     LoginState State;
 
     long uid;
     QString Name;
     QString Nickname;
+    QString Email;
     QString Token;
-    QPixmap Avatar;
     QByteArray AvatarBase64;
 
     QFile Data;
 
     void saveToFile();
     void readFromFile();
+    void inputClientInfo();
 
 private slots:
     void setClientInfo(QNetworkReply *);

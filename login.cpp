@@ -1,6 +1,7 @@
 #include "login.h"
 #include "ui_login.h"
 #include "settings.h"
+#include "clientinfo.h"
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -73,6 +74,7 @@ void Login::on_loginButton_clicked()
         QMessageBox::warning(this,"登录失败",JObj["msg"].toString());
         return;
     } else {
+        ClientInfo::newClient(username,password,JObj["token"].toString());
         QMessageBox::information(this,"登陆成功",JObj["token"].toString());
     }
 }
