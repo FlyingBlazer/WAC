@@ -1,38 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ClientInfoCollector</class>
- <widget class="QDialog" name="ClientInfoCollector">
+ <class>ShowCLientInfo</class>
+ <widget class="QDialog" name="ShowCLientInfo">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>432</width>
-    <height>564</height>
+    <width>481</width>
+    <height>410</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <property name="styleSheet">
-   <string notr="true">background-color: rgb(255, 255, 255);</string>
-  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
-    <spacer name="verticalSpacer_2">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeType">
-      <enum>QSizePolicy::Preferred</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
    <item>
     <layout class="QGridLayout" name="gridLayout">
      <item row="3" column="1">
@@ -81,12 +62,6 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="nicknameInput"/>
-     </item>
-     <item row="4" column="1">
-      <widget class="QLineEdit" name="incomeInput"/>
-     </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
@@ -110,9 +85,6 @@
        </property>
       </spacer>
      </item>
-     <item row="6" column="1">
-      <widget class="QLineEdit" name="educationInput"/>
-     </item>
      <item row="6" column="0">
       <widget class="QLabel" name="label_4">
        <property name="text">
@@ -123,82 +95,62 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
-      <widget class="QComboBox" name="sexInput">
-       <property name="currentText">
-        <string>保密</string>
-       </property>
-       <item>
-        <property name="text">
-         <string>男</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>女</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>保密</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <spacer name="verticalSpacer_4">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>222</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="okButton">
+     <item row="0" column="1">
+      <widget class="QLabel" name="NickNameLable">
        <property name="text">
-        <string>确定</string>
+        <string>TextLabel</string>
        </property>
       </widget>
      </item>
-     <item>
-      <spacer name="horizontalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+     <item row="2" column="1">
+      <widget class="QLabel" name="SexLable">
+       <property name="text">
+        <string>TextLabel</string>
        </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLabel" name="IncomeLable">
+       <property name="text">
+        <string>TextLabel</string>
        </property>
-      </spacer>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QLabel" name="EducationLable">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QPushButton" name="pushButton">
+     <property name="text">
+      <string>Close</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>ShowCLientInfo</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>240</x>
+     <y>389</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>240</x>
+     <y>204</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

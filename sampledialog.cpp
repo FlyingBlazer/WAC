@@ -3,15 +3,18 @@
 #include "settings.h"
 #include <QEventLoop>
 #include <QDesktopWidget>
+#include <QProcessEnvironment>
 
 SampleDialog::SampleDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SampleDialog)
 {
     ui->setupUi(this);
-    QRect applicationGeometry=QApplication::desktop()->availableGeometry();
-    this->setFixedHeight(applicationGeometry.height());
-    this->setFixedWidth(applicationGeometry.width());
+    if(QProcessEnvironment::systemEnvironment().value("OS")!=QString("Windows_NT"))
+    {
+        QRect applicationGeometry=QApplication::desktop()->availableGeometry();
+        this->setFixedSize(applicationGeometry.size());
+    }
     ui->textBrowser->viewport()->setAttribute(Qt::WA_AcceptTouchEvents);
 }
 

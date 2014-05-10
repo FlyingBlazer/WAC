@@ -3,49 +3,74 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QNetworkRequest>
+#include <QMessageBox>
+#include <QDir>
 
-ClientInfo ClientInfo::Instance;
+ClientInfo *ClientInfo::Instance=0;
 
-ClientInfo &ClientInfo::getInstance()
+ClientInfo *ClientInfo::getInstance(QObject *parent)
 {
-    return Instance;
+    if(Instance!=0)
+        return Instance;
+    else
+        return (Instance=new ClientInfo(parent));
 }
 
-ClientInfo &ClientInfo::newClient(QString username, QString email, QString token)
+ClientInfo *ClientInfo::newClient(QString username, QString email, QString token, QObject *parent)
 {
-    Instance.Name=username;
-    Instance.Email=email;
-    Instance.Token=token;
-    Instance.inputClientInfo();
-    Instance.saveToFile();
+    if(Instance!=0)
+        delete Instance;
+    Instance=new ClientInfo(parent);
+    Instance->Name=username;
+    Instance->Email=email;
+    Instance->Token=token;
+    Instance->inputClientInfo();
+    Instance->save();
     return Instance;
 }
 
 ClientInfo::ClientInfo(QObject *parent) :
-    QObject(parent)
+    QObject(parent),setting("buaa.GBK","WAC")
 {
-    if(!QFile::exists(getExternalStorageDirectory()+"/WAC/user.dat"))
-    {
-        Data.setFileName(getExternalStorageDirectory()+"/WAC/user.dat");
-        Data.open(QIODevice::ReadWrite);
-        State=NotLogin;
-        return;
-    }
-    Data.setFileName(getExternalStorageDirectory()+"/WAC/user.dat");
-    Data.open(QIODevice::ReadWrite);
-    readFromFile();
+    State=NotLogin;
+    read();
 }
 
-QByteArray ClientInfo::getAvatarBase64() const
+ClientInfo::ClientInfo(ClientInfo &c) :
+    QObject(c.parent()),setting("buaa.GBK","WAC")
 {
-    return AvatarBase64;
+
 }
 
-void ClientInfo::setAvatarBase64(const QByteArray &value)
+QString ClientInfo::getSex() const
 {
-    AvatarBase64 = value;
+    return Sex;
 }
 
+void ClientInfo::setSex(const QString &value)
+{
+    Sex = value;
+}
+
+QString ClientInfo::getIncome() const
+{
+    return Income;
+}
+
+void ClientInfo::setIncome(const QString &value)
+{
+    Income = value;
+}
+
+QString ClientInfo::getEducation() const
+{
+    return Education;
+}
+
+void ClientInfo::setEducation(const QString &value)
+{
+    Education = value;
+}
 
 QString ClientInfo::getEmail() const
 {
@@ -66,7 +91,7 @@ void ClientInfo::setUid(long id)
 {
     uid=id;
     refresh();
-    saveToFile();
+    save();
 }
 
 QString ClientInfo::getToken() const
@@ -123,36 +148,45 @@ void ClientInfo::setClientInfo(QNetworkReply *reply)
     QJsonObject JObj=QJsonDocument::fromJson(raw).object();
     Name=JObj["Name"].toString();
     Nickname=JObj["Nickname"].toString();
-    AvatarBase64=JObj["Avatar"].toString().toLocal8Bit();
     emit finished();
 }
 
-void ClientInfo::readFromFile()
+void ClientInfo::read()
 {
-    QByteArray data=QByteArray::fromBase64(Data.readAll());
-    QJsonObject JObj=QJsonDocument::fromJson(data).object();
-    Name=JObj["Name"].toString();
-    Nickname=JObj["Nickname"].toString();
-    AvatarBase64=JObj["Avatar"].toString().toLocal8Bit();
-    State=HasLogin;
+    setting.beginGroup("ClientInfo");
+    if(setting.contains("Token"))
+    {
+        Name=setting.value("Name").toString();
+        Nickname=setting.value("Nickname").toString();
+        Token=setting.value("Token").toString();
+        Sex=setting.value("Sex").toString();
+        Income=setting.value("Income").toString();
+        Education=setting.value("Education").toString();
+        State=HasLogin;
+    }
+    setting.endGroup();
 }
 
-void ClientInfo::saveToFile()
+void ClientInfo::save()
 {
-    QJsonObject JObj;
-    JObj.insert("Name",QJsonValue(Name));
-    JObj.insert("NickName",QJsonValue(Nickname));
-    JObj.insert("Avatar",QJsonValue(QString(AvatarBase64.toBase64())));
-    QByteArray d=QJsonDocument(JObj).toJson();
-    Data.write(d);
+    setting.beginGroup("ClientInfo");
+    setting.setValue("Name",Name);
+    setting.setValue("Nickname",Nickname);
+    setting.setValue("Token",Token);
+    setting.setValue("Sex",Sex);
+    setting.setValue("Income",Income);
+    setting.setValue("Education",Education);
+    setting.endGroup();
 }
 
 void ClientInfo::inputClientInfo()
 {
     ClientInfoCollector cic;
-    connect(&cic,&ClientInfoCollector::data,[this](QString nickname,QByteArray picdata){
+    connect(&cic,&ClientInfoCollector::data,[this](QString nickname,QString sex,QString income,QString education){
         Nickname=nickname;
-        AvatarBase64=picdata;
+        Sex=sex;
+        Income=income;
+        Education=education;
     });
     cic.exec();
 }

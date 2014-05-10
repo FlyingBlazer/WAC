@@ -16,11 +16,9 @@ public:
     ~ClientInfoCollector();
 
 signals:
-    void data(QString nickname,QByteArray avatar);
+    void data(QString, QString, QString, QString);
 
 private slots:
-    void on_selectButton_clicked();
-
     void on_okButton_clicked();
 
 private:

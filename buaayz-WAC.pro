@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network androidextras
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -20,7 +20,10 @@ SOURCES += main.cpp\
     login.cpp \
     clientinfo.cpp \
     utils.cpp \
-    clientinfocollector.cpp
+    clientinfocollector.cpp \
+    selectcar.cpp \
+    showclientinfo.cpp \
+    touchablescrollarea.cpp
 
 HEADERS  += mainwindow.h \
     sampledialog.h \
@@ -29,15 +32,20 @@ HEADERS  += mainwindow.h \
     settings.h \
     clientinfo.h \
     utils.h \
-    clientinfocollector.h
+    clientinfocollector.h \
+    selectcar.h \
+    showclientinfo.h \
+    touchablescrollarea.h
 
 FORMS    += mainwindow.ui \
     sampledialog.ui \
     sign.ui \
     login.ui \
-    clientinfocollector.ui
+    clientinfocollector.ui \
+    selectcar.ui \
+    showclientinfo.ui
 
-CONFIG += mobility
+CONFIG += mobility c++11
 MOBILITY = 
 
 OTHER_FILES += \

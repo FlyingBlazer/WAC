@@ -9,13 +9,17 @@
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QProcessEnvironment>
 
 Sign::Sign(QWidget *parent) :
     QDialog(parent),ui(new Ui::Sign)
 {
     ui->setupUi(this);
-    QRect applicationGeometry=QApplication::desktop()->availableGeometry();
-    this->setFixedSize(applicationGeometry.size());
+    if(QProcessEnvironment::systemEnvironment().value("OS")!=QString("Windows_NT"))
+    {
+        QRect applicationGeometry=QApplication::desktop()->availableGeometry();
+        this->setFixedSize(applicationGeometry.size());
+    }
 }
 
 Sign::~Sign()

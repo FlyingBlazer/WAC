@@ -9,14 +9,18 @@
 #include <QDesktopWidget>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QProcessEnvironment>
 
 Login::Login(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Login)
 {
     ui->setupUi(this);
-    QRect applicationGeometry=QApplication::desktop()->availableGeometry();
-    this->setFixedSize(applicationGeometry.size());
+    if(QProcessEnvironment::systemEnvironment().value("OS")!=QString("Windows_NT"))
+    {
+        QRect applicationGeometry=QApplication::desktop()->availableGeometry();
+        this->setFixedSize(applicationGeometry.size());
+    }
 }
 
 Login::~Login()
@@ -74,7 +78,7 @@ void Login::on_loginButton_clicked()
         QMessageBox::warning(this,"登录失败",JObj["msg"].toString());
         return;
     } else {
-        ClientInfo::newClient(username,password,JObj["token"].toString());
+        ClientInfo::newClient(username,password,JObj["token"].toString(),this);
         QMessageBox::information(this,"登陆成功",JObj["token"].toString());
     }
 }

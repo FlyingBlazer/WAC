@@ -5,15 +5,21 @@
 #include "login.h"
 #include "settings.h"
 #include <QDesktopWidget>
+#include <QProcessEnvironment>
+#include "selectcar.h"
+#include "clientinfo.h"
+#include "showclientinfo.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    QRect applicationGeometry=QApplication::desktop()->availableGeometry();
-    this->setFixedHeight(applicationGeometry.height());
-    this->setFixedWidth(applicationGeometry.width());
+    if(QProcessEnvironment::systemEnvironment().value("OS")!=QString("Windows_NT"))
+    {
+        QRect applicationGeometry=QApplication::desktop()->availableGeometry();
+        this->setFixedSize(applicationGeometry.size());
+    }
 }
 
 MainWindow::~MainWindow()
@@ -38,4 +44,21 @@ void MainWindow::on_pushButton_3_clicked()
 {
     Login a;
     a.exec();
+}
+
+void MainWindow::on_pushButton_4_clicked()
+{
+    SelectCar a;
+    a.exec();
+}
+
+void MainWindow::on_pushButton_5_clicked()
+{
+    ClientInfo::newClient("test","test","test",this);
+}
+
+void MainWindow::on_pushButton_6_clicked()
+{
+    ShowClientInfo s;
+    s.exec();
 }
