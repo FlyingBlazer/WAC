@@ -32,11 +32,6 @@ QByteArray Login::login(QString username, QString password)
 {
     QNetworkRequest request(QUrl(Settings::LoginPage));
     request.setRawHeader("Content-Type","application/x-www-form-urlencoded");
-//    request.setRawHeader("Accept","text/html,application/xhtml+xml,"
-//                         "application/xml;q=0.9,image/webp,*/*;q=0.8");
-//    request.setRawHeader("Accept-Encoding","gzip,deflate,sdch");
-//    request.setRawHeader("User-Agent","Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36"
-//                         " (KHTML, like Gecko) Chrome/33.0.1750.146 Safari/537.36");
     QByteArray postData;
     postData.append("username=").append(username).append("&password=")
             .append(QCryptographicHash::hash(password.toLatin1(),QCryptographicHash::Md5))
@@ -49,8 +44,6 @@ QByteArray Login::login(QString username, QString password)
     void (QNetworkReply:: *E)(QNetworkReply::NetworkError)=&QNetworkReply::error;
 
     QMetaObject::Connection b=connect(reply,E,[&reply](QNetworkReply::NetworkError err){
-        qDebug() << static_cast<int>(err);
-        qDebug() << reply->errorString();
         QMessageBox ErrMsg;
         ErrMsg.setText(reply->errorString());
         ErrMsg.exec();
@@ -78,7 +71,7 @@ void Login::on_loginButton_clicked()
         QMessageBox::warning(this,"登录失败",JObj["msg"].toString());
         return;
     } else {
-        ClientInfo::newClient(username,password,JObj["token"].toString(),this);
+        ClientInfo::newClient(username,QString(),JObj["token"].toString());
         QMessageBox::information(this,"登陆成功",JObj["token"].toString());
     }
 }

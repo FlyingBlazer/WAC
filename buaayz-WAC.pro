@@ -6,6 +6,8 @@
 
 QT       += core gui network
 
+android: QT += androidextras
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = WAC

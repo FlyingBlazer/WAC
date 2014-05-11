@@ -4,11 +4,12 @@
 #include "sign.h"
 #include "login.h"
 #include "settings.h"
-#include <QDesktopWidget>
-#include <QProcessEnvironment>
 #include "selectcar.h"
 #include "clientinfo.h"
 #include "showclientinfo.h"
+#include <QDesktopWidget>
+#include <QProcessEnvironment>
+#include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -36,7 +37,6 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::on_pushButton_2_clicked()
 {
     Sign a;
-    connect(&a,&Sign::succeed,this,&MainWindow::on_pushButton_3_clicked);
     a.exec();
 }
 
@@ -54,7 +54,8 @@ void MainWindow::on_pushButton_4_clicked()
 
 void MainWindow::on_pushButton_5_clicked()
 {
-    ClientInfo::newClient("test","test","test",this);
+    QSettings setting("buaa.GBK","WAC");
+    setting.clear();
 }
 
 void MainWindow::on_pushButton_6_clicked()

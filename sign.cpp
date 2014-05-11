@@ -85,6 +85,9 @@ void Sign::on_acceptButton_clicked()
         return;
     }
     QMessageBox::information(this,"注册成功",JObj["msg"].toString());
+
+    ClientInfo *client=ClientInfo::newClient(username,email,JObj["token"].toString(),true);
+
     emit succeed();
     accept();
 }

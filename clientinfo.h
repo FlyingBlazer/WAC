@@ -15,9 +15,7 @@ class ClientInfo : public QObject
     Q_OBJECT
 public:
     static ClientInfo *getInstance(QObject *parent=0);
-    static ClientInfo *newClient(QString username, QString email, QString token, QObject *parent=0);
-
-    ClientInfo(ClientInfo&);
+    static ClientInfo *newClient(QString username, QString email, QString token, bool fromSign=0, QObject *parent=0);
 
     enum LoginState
     {
@@ -50,7 +48,6 @@ public:
 
 public slots:
     void refresh();
-    void setUid(long);
 
 signals:
     void finished();
@@ -63,7 +60,6 @@ private:
     LoginState State;
     QSettings setting;
 
-    long uid;
     QString Name;
     QString Nickname;
     QString Email;
@@ -76,6 +72,7 @@ private:
 
     void save();
     void read();
+    void upLoad();
     void inputClientInfo();
 
 private slots:

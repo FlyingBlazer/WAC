@@ -16,7 +16,7 @@ ClientInfo *ClientInfo::getInstance(QObject *parent)
         return (Instance=new ClientInfo(parent));
 }
 
-ClientInfo *ClientInfo::newClient(QString username, QString email, QString token, QObject *parent)
+ClientInfo *ClientInfo::newClient(QString username, QString email, QString token, bool fromSign, QObject *parent)
 {
     if(Instance!=0)
         delete Instance;
@@ -24,8 +24,12 @@ ClientInfo *ClientInfo::newClient(QString username, QString email, QString token
     Instance->Name=username;
     Instance->Email=email;
     Instance->Token=token;
-    Instance->inputClientInfo();
+    if(fromSign)
+        Instance->inputClientInfo();
+    else
+        Instance->refresh();
     Instance->save();
+    Instance->upLoad();
     return Instance;
 }
 
@@ -34,12 +38,6 @@ ClientInfo::ClientInfo(QObject *parent) :
 {
     State=NotLogin;
     read();
-}
-
-ClientInfo::ClientInfo(ClientInfo &c) :
-    QObject(c.parent()),setting("buaa.GBK","WAC")
-{
-
 }
 
 QString ClientInfo::getSex() const
@@ -87,13 +85,6 @@ ClientInfo::LoginState ClientInfo::getLoginState()
     return State;
 }
 
-void ClientInfo::setUid(long id)
-{
-    uid=id;
-    refresh();
-    save();
-}
-
 QString ClientInfo::getToken() const
 {
     return Token;
@@ -135,7 +126,7 @@ void ClientInfo::refresh()
 //    request.setRawHeader("User-Agent","Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36"
 //                         " (KHTML, like Gecko) Chrome/33.0.1750.146 Safari/537.36");
     QByteArray postData;
-    postData.append("uid=").append(QString::number(uid))
+    postData.append("token=").append(Token)
             .append("&magic=").append(Settings::Magic);
     NAM.post(request,postData);
 
@@ -146,9 +137,30 @@ void ClientInfo::setClientInfo(QNetworkReply *reply)
 {
     QByteArray raw=reply->readAll();
     QJsonObject JObj=QJsonDocument::fromJson(raw).object();
-    Name=JObj["Name"].toString();
+    Email=JObj["Email"].toString();
     Nickname=JObj["Nickname"].toString();
+    Sex=JObj["Sex"].toString();
+    Income=JObj["Income"].toString();
+    Education=JObj["Education"].toString();
     emit finished();
+}
+
+void ClientInfo::upLoad()
+{
+    QJsonObject JObj;
+    JObj.insert("Nickname",Nickname);
+    JObj.insert("Sex",Sex);
+    JObj.insert("Income",Income);
+    JObj.insert("Education",Education);
+    QByteArray data=QJsonDocument(JObj).toJson();
+    QNetworkAccessManager NAM;
+    QNetworkRequest request(QUrl(Settings::ClientInfoPage));
+    request.setRawHeader("Content-Type","application/x-www-form-urlencoded");
+    QByteArray postData;
+    postData.append("token=").append(Token)
+            .append("&magic=").append(Settings::Magic)
+            .append("&data=").append(QUrl(data).toEncoded());
+    NAM.post(request,postData);
 }
 
 void ClientInfo::read()
@@ -157,6 +169,7 @@ void ClientInfo::read()
     if(setting.contains("Token"))
     {
         Name=setting.value("Name").toString();
+        Email=setting.value("Email").toString();
         Nickname=setting.value("Nickname").toString();
         Token=setting.value("Token").toString();
         Sex=setting.value("Sex").toString();
@@ -171,6 +184,7 @@ void ClientInfo::save()
 {
     setting.beginGroup("ClientInfo");
     setting.setValue("Name",Name);
+    setting.setValue("Email",Email);
     setting.setValue("Nickname",Nickname);
     setting.setValue("Token",Token);
     setting.setValue("Sex",Sex);
