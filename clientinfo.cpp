@@ -120,11 +120,6 @@ void ClientInfo::refresh()
     QNetworkAccessManager NAM;
     QNetworkRequest request(QUrl(Settings::ClientInfoPage));
     request.setRawHeader("Content-Type","application/x-www-form-urlencoded");
-//    request.setRawHeader("Accept","text/html,application/xhtml+xml,"
-//                         "application/xml;q=0.9,image/webp,*/*;q=0.8");
-//    request.setRawHeader("Accept-Encoding","gzip,deflate,sdch");
-//    request.setRawHeader("User-Agent","Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36"
-//                         " (KHTML, like Gecko) Chrome/33.0.1750.146 Safari/537.36");
     QByteArray postData;
     postData.append("token=").append(Token)
             .append("&magic=").append(Settings::Magic);
@@ -154,12 +149,14 @@ void ClientInfo::upLoad()
     JObj.insert("Education",Education);
     QByteArray data=QJsonDocument(JObj).toJson();
     QNetworkAccessManager NAM;
-    QNetworkRequest request(QUrl(Settings::ClientInfoPage));
+    QNetworkRequest request(QUrl(Settings::ClientInfoUpLoadPage));
     request.setRawHeader("Content-Type","application/x-www-form-urlencoded");
     QByteArray postData;
     postData.append("token=").append(Token)
-            .append("&magic=").append(Settings::Magic)
-            .append("&data=").append(QUrl(data).toEncoded());
+            .append("&Nickname=").append(Nickname)
+            .append("&Sex=").append(Sex)
+            .append("&Income=").append(Income)
+            .append("&Education=").append(Education);
     NAM.post(request,postData);
 }
 

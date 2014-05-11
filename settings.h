@@ -14,6 +14,8 @@ public:
     static QString SignPage;
     static QString Magic;
     static QString ClientInfoPage;
+    static QString ClientInfoUpLoadPage;
+    static QString CarDetailpage;
 };
 
 #endif // SETTINGS_H

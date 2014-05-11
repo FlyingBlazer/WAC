@@ -2,6 +2,7 @@
 #define SELECTCAR_H
 
 #include <QDialog>
+#include <QList>
 #include "touchablescrollarea.h"
 
 namespace Ui {
@@ -16,12 +17,18 @@ public:
     explicit SelectCar(QWidget *parent = 0);
     ~SelectCar();
 
+    QList<QString> getCarList() const;
+    void setCarList(const QList<QString> &value);
+
+    int exec();
+
 signals:
     void selected(long);
 
 private:
     Ui::SelectCar *ui;
     TouchableScrollArea *panel;
+    QList<QString> CarList;
 };
 
 #endif // SELECTCAR_H

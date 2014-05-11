@@ -1,5 +1,6 @@
 #include "selectcar.h"
 #include "ui_selectcar.h"
+#include "selectwidget.h"
 #include <QDesktopWidget>
 #include <QVBoxLayout>
 #include <QRadioButton>
@@ -20,17 +21,30 @@ SelectCar::SelectCar(QWidget *parent) :
     }
     panel=new TouchableScrollArea(this);
     ui->verticalLayout->insertWidget(0,panel);
-    QWidget *w=new QWidget(panel);
-    QVBoxLayout *layout=new QVBoxLayout(w);
-    w->setLayout(layout);
-    for(int i=0;i<100;i++)
-    {
-        layout->addWidget(new QLabel(QString::number(i)));
-    }
+    SelectWidget *w=new SelectWidget(panel);
     panel->setWidget(w);
 }
 
 SelectCar::~SelectCar()
 {
     delete ui;
+}
+
+QList<QString> SelectCar::getCarList() const
+{
+    return CarList;
+}
+
+void SelectCar::setCarList(const QList<QString> &value)
+{
+    CarList = value;
+}
+
+int SelectCar::exec()
+{
+    for(int i=0;i<CarList.size();i++)
+    {
+        static_cast<SelectWidget *>(panel->widget())->addItem(CarList.at(i));
+    }
+    return QDialog::exec();
 }

@@ -25,7 +25,9 @@ SOURCES += main.cpp\
     clientinfocollector.cpp \
     selectcar.cpp \
     showclientinfo.cpp \
-    touchablescrollarea.cpp
+    touchablescrollarea.cpp \
+    selectitem.cpp \
+    selectwidget.cpp
 
 HEADERS  += mainwindow.h \
     sampledialog.h \
@@ -37,7 +39,9 @@ HEADERS  += mainwindow.h \
     clientinfocollector.h \
     selectcar.h \
     showclientinfo.h \
-    touchablescrollarea.h
+    touchablescrollarea.h \
+    selectitem.h \
+    selectwidget.h
 
 FORMS    += mainwindow.ui \
     sampledialog.ui \
@@ -45,7 +49,8 @@ FORMS    += mainwindow.ui \
     login.ui \
     clientinfocollector.ui \
     selectcar.ui \
-    showclientinfo.ui
+    showclientinfo.ui \
+    selectitem.ui
 
 CONFIG += mobility c++11
 MOBILITY = 
