@@ -39,7 +39,12 @@ void ClientInfoCollector::on_okButton_clicked()
         QMessageBox::warning(this,tr("错误"),tr("请填写学历"));
         return;
     }
-    emit data(ui->nicknameInput->text(),ui->sexInput->currentText(),
-              ui->incomeInput->text(),ui->educationInput->text());
+    if(ui->ageEdit->text().length()==0)
+    {
+        QMessageBox::warning(this,tr("错误"),tr("请填写年龄"));
+        return;
+    }
+    emit data(ui->nicknameInput->text(),ui->sexInput->currentText()=="男"?true:false,
+              ui->incomeInput->text().toInt(),ui->educationInput->text(),ui->ageEdit->text().toInt());
     accept();
 }

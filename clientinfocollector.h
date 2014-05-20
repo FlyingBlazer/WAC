@@ -16,7 +16,7 @@ public:
     ~ClientInfoCollector();
 
 signals:
-    void data(QString, QString, QString, QString);
+    void data(QString, bool, int, QString, int);
 
 private slots:
     void on_okButton_clicked();

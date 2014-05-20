@@ -1,6 +1,8 @@
 #include "selectcar.h"
 #include "ui_selectcar.h"
 #include "selectwidget.h"
+#include "settings.h"
+#include "clientinfo.h"
 #include <QDesktopWidget>
 #include <QVBoxLayout>
 #include <QRadioButton>
@@ -8,6 +10,8 @@
 #include <QListWidgetItem>
 #include <QProcessEnvironment>
 #include <QLabel>
+#include <QNetworkReply>
+#include <QNetworkRequest>
 
 SelectCar::SelectCar(QWidget *parent) :
     QDialog(parent),
@@ -47,4 +51,15 @@ int SelectCar::exec()
         static_cast<SelectWidget *>(panel->widget())->addItem(CarList.at(i));
     }
     return QDialog::exec();
+}
+
+void SelectCar::addRecommandCars()
+{
+    QNetworkRequest request(QUrl(Settings::RecommandCar));
+    QByteArray postData;
+    ClientInfo *ci=ClientInfo::getInstance();
+    postData.append("username=").append(ci->getName())
+            .append("&token=").append(ci->getToken());
+    NAM.post(request,postData);
+    connect(&NAM,&QNetworkAccessManager::finished,this,&SelectCar::finished);
 }

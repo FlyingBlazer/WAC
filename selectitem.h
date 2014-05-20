@@ -5,6 +5,8 @@
 #include <QNetworkReply>
 #include <QNetworkAccessManager>
 #include <QPixmap>
+#include <QTime>
+#include "cardetail.h"
 
 namespace Ui {
 class SelectItem;
@@ -18,11 +20,20 @@ public:
     SelectItem(QString id, QWidget *parent = 0);
     ~SelectItem();
 
+signals:
+    void selected();
+
+protected:
+    void mousePressEvent(QMouseEvent *);
+    void mouseReleaseEvent(QMouseEvent *);
+
 private:
     Ui::SelectItem *ui;
     QString id;
     QNetworkAccessManager NAM;
     QPixmap pix;
+    QTime PressTime;
+    CarDetail *detail;
     void load();
 
 private slots:

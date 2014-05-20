@@ -10,8 +10,10 @@ QString Settings::SignPage=Settings::Domain+"/register";
 
 QString Settings::Magic="HowAreYou";
 
-QString Settings::ClientInfoPage=Settings::Domain+"/clientinfo";
+QString Settings::ClientInfoPage=Settings::Domain+"/getinfo";
 
-QString Settings::ClientInfoUpLoadPage=Settings::ClientInfoPage+"/upload";
+QString Settings::ClientInfoUpLoadPage=Settings::Domain+"/setinfo";
 
 QString Settings::CarDetailpage=Settings::Domain+"/cardetail";
+
+QString Settings::RecommandCar=Settings::Domain+"/getAffordableCars";

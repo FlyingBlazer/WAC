@@ -17,7 +17,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    qDebug() << QProcessEnvironment::systemEnvironment().keys();
     if(QProcessEnvironment::systemEnvironment().value("OS")!=QString("Windows_NT"))
     {
         QRect applicationGeometry=QApplication::desktop()->availableGeometry();

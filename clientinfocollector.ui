@@ -35,8 +35,8 @@
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="3" column="1">
-      <spacer name="verticalSpacer_3">
+     <item row="7" column="1">
+      <spacer name="verticalSpacer_6">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
@@ -61,6 +61,22 @@
        </property>
       </spacer>
      </item>
+     <item row="3" column="1">
+      <spacer name="verticalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="nicknameInput"/>
+     </item>
      <item row="2" column="0">
       <widget class="QLabel" name="label_2">
        <property name="text">
@@ -81,11 +97,18 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="nicknameInput"/>
-     </item>
      <item row="4" column="1">
       <widget class="QLineEdit" name="incomeInput"/>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>学历：</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
      </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label">
@@ -113,20 +136,10 @@
      <item row="6" column="1">
       <widget class="QLineEdit" name="educationInput"/>
      </item>
-     <item row="6" column="0">
-      <widget class="QLabel" name="label_4">
-       <property name="text">
-        <string>学历：</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
      <item row="2" column="1">
       <widget class="QComboBox" name="sexInput">
        <property name="currentText">
-        <string>保密</string>
+        <string>男</string>
        </property>
        <item>
         <property name="text">
@@ -143,6 +156,19 @@
          <string>保密</string>
         </property>
        </item>
+      </widget>
+     </item>
+     <item row="8" column="1">
+      <widget class="QLineEdit" name="ageEdit"/>
+     </item>
+     <item row="8" column="0">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>年龄：</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
       </widget>
      </item>
     </layout>

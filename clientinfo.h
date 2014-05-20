@@ -40,11 +40,19 @@ public:
     QString getEducation() const;
     void setEducation(const QString &value);
 
-    QString getIncome() const;
-    void setIncome(const QString &value);
+    int getIncome() const;
+    void setIncome(const int &value);
 
-    QString getSex() const;
-    void setSex(const QString &value);
+    bool getGender() const;
+    void setGender(const bool &value);
+
+    int getExpense() const;
+    void setExpense(int value);
+
+    int getAge() const;
+    void setAge(int value);
+
+    void commit();
 
 public slots:
     void refresh();
@@ -64,9 +72,11 @@ private:
     QString Nickname;
     QString Email;
     QString Token;
-    QString Sex;
-    QString Income;
     QString Education;
+    bool Gender;
+    int Income;
+    int Age;
+    int Expense;
 
     QFile Data;
 

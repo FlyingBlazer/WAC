@@ -16,6 +16,7 @@ public:
     static QString ClientInfoPage;
     static QString ClientInfoUpLoadPage;
     static QString CarDetailpage;
+    static QString RecommandCar;
 };
 
 #endif // SETTINGS_H

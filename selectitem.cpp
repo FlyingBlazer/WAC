@@ -7,9 +7,13 @@
 #include <QPixmap>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
+#include <QMenu>
+#include <QAction>
+#include <QMouseEvent>
 
 SelectItem::SelectItem(QString id, QWidget *parent) :
-    QWidget(parent),ui(new Ui::SelectItem),id(id)
+    QWidget(parent),ui(new Ui::SelectItem),id(id),
+    detail(new CarDetail(this))
 {
     ui->setupUi(this);
 }
@@ -17,6 +21,27 @@ SelectItem::SelectItem(QString id, QWidget *parent) :
 SelectItem::~SelectItem()
 {
     delete ui;
+}
+
+void SelectItem::mousePressEvent(QMouseEvent *e)
+{
+    if(e->buttons().testFlag(Qt::LeftButton))
+    {
+        PressTime=QTime::currentTime();
+    }
+}
+
+void SelectItem::mouseReleaseEvent(QMouseEvent *e)
+{
+    if(e->buttons().testFlag(Qt::LeftButton))
+    {
+        if(PressTime.secsTo(QTime::currentTime()))
+        {
+            detail->setId(id.toLong());
+            connect(detail,&CarDetail::accepted,static_cast<QWidget *>(this->parent()),&QWidget::close);
+            detail->exec();
+        }
+    }
 }
 
 void SelectItem::load()

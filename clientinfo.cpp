@@ -28,8 +28,7 @@ ClientInfo *ClientInfo::newClient(QString username, QString email, QString token
         Instance->inputClientInfo();
     else
         Instance->refresh();
-    Instance->save();
-    Instance->upLoad();
+    Instance->commit();
     return Instance;
 }
 
@@ -40,22 +39,42 @@ ClientInfo::ClientInfo(QObject *parent) :
     read();
 }
 
-QString ClientInfo::getSex() const
+int ClientInfo::getAge() const
 {
-    return Sex;
+    return Age;
 }
 
-void ClientInfo::setSex(const QString &value)
+void ClientInfo::setAge(int value)
 {
-    Sex = value;
+    Age = value;
 }
 
-QString ClientInfo::getIncome() const
+int ClientInfo::getExpense() const
+{
+    return Expense;
+}
+
+void ClientInfo::setExpense(int value)
+{
+    Expense = value;
+}
+
+bool ClientInfo::getGender() const
+{
+    return Gender;
+}
+
+void ClientInfo::setGender(const bool &value)
+{
+    Gender = value;
+}
+
+int ClientInfo::getIncome() const
 {
     return Income;
 }
 
-void ClientInfo::setIncome(const QString &value)
+void ClientInfo::setIncome(const int &value)
 {
     Income = value;
 }
@@ -115,6 +134,12 @@ void ClientInfo::setName(const QString &value)
     Name = value;
 }
 
+void ClientInfo::commit()
+{
+    save();
+    upLoad();
+}
+
 void ClientInfo::refresh()
 {
     QNetworkAccessManager NAM;
@@ -134,30 +159,27 @@ void ClientInfo::setClientInfo(QNetworkReply *reply)
     QJsonObject JObj=QJsonDocument::fromJson(raw).object();
     Email=JObj["Email"].toString();
     Nickname=JObj["Nickname"].toString();
-    Sex=JObj["Sex"].toString();
-    Income=JObj["Income"].toString();
+    Gender=JObj["Gender"].toBool();
+    Income=JObj["Income"].toInt();
     Education=JObj["Education"].toString();
+    Age=JObj["Age"].toInt();
+
     emit finished();
 }
 
 void ClientInfo::upLoad()
 {
-    QJsonObject JObj;
-    JObj.insert("Nickname",Nickname);
-    JObj.insert("Sex",Sex);
-    JObj.insert("Income",Income);
-    JObj.insert("Education",Education);
-    QByteArray data=QJsonDocument(JObj).toJson();
     QNetworkAccessManager NAM;
     QNetworkRequest request(QUrl(Settings::ClientInfoUpLoadPage));
     request.setRawHeader("Content-Type","application/x-www-form-urlencoded");
     QByteArray postData;
     postData.append("token=").append(Token)
             .append("&Nickname=").append(Nickname)
-            .append("&Sex=").append(Sex)
+            .append("&Gender=").append(Gender)
             .append("&Income=").append(Income)
-            .append("&Education=").append(Education);
-    NAM.post(request,postData);
+            .append("&Education=").append(Education)
+            .append("&Age=").append(Age);
+    NAM.post(request,QUrl::toEncoded(postData));
 }
 
 void ClientInfo::read()
@@ -169,9 +191,10 @@ void ClientInfo::read()
         Email=setting.value("Email").toString();
         Nickname=setting.value("Nickname").toString();
         Token=setting.value("Token").toString();
-        Sex=setting.value("Sex").toString();
-        Income=setting.value("Income").toString();
+        Gender=setting.value("Gender").toBool();
+        Income=setting.value("Income").toInt();
         Education=setting.value("Education").toString();
+        Age=setting.value("Age").toInt();
         State=HasLogin;
     }
     setting.endGroup();
@@ -184,7 +207,7 @@ void ClientInfo::save()
     setting.setValue("Email",Email);
     setting.setValue("Nickname",Nickname);
     setting.setValue("Token",Token);
-    setting.setValue("Sex",Sex);
+    setting.setValue("Gender",Gender);
     setting.setValue("Income",Income);
     setting.setValue("Education",Education);
     setting.endGroup();
@@ -193,11 +216,12 @@ void ClientInfo::save()
 void ClientInfo::inputClientInfo()
 {
     ClientInfoCollector cic;
-    connect(&cic,&ClientInfoCollector::data,[this](QString nickname,QString sex,QString income,QString education){
+    connect(&cic,&ClientInfoCollector::data,[this](QString nickname,bool Gender,int income,QString education,int age){
         Nickname=nickname;
-        Sex=sex;
+        Gender=Gender;
         Income=income;
         Education=education;
+        Age=age;
     });
     cic.exec();
 }

@@ -3,7 +3,10 @@
 
 #include <QDialog>
 #include <QList>
+#include <QNetworkAccessManager>
 #include "touchablescrollarea.h"
+
+class QNetworkReply;
 
 namespace Ui {
 class SelectCar;
@@ -29,6 +32,11 @@ private:
     Ui::SelectCar *ui;
     TouchableScrollArea *panel;
     QList<QString> CarList;
+    QNetworkAccessManager NAM;
+    void addRecommandCars();
+
+private slots:
+    void finished(QNetworkReply *);
 };
 
 #endif // SELECTCAR_H
