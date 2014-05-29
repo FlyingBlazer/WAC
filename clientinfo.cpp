@@ -5,6 +5,7 @@
 #include <QNetworkRequest>
 #include <QMessageBox>
 #include <QDir>
+#include <QUrl>
 
 ClientInfo *ClientInfo::Instance=0;
 
@@ -36,8 +37,20 @@ ClientInfo::ClientInfo(QObject *parent) :
     QObject(parent),setting("buaa.GBK","WAC")
 {
     State=NotLogin;
+    Nickname="undefined";
+    SelectedCarId=-1;
     read();
 }
+int ClientInfo::getSelectedCarId() const
+{
+    return SelectedCarId;
+}
+
+void ClientInfo::setSelectedCarId(int value)
+{
+    SelectedCarId = value;
+}
+
 
 int ClientInfo::getAge() const
 {
@@ -163,6 +176,8 @@ void ClientInfo::setClientInfo(QNetworkReply *reply)
     Income=JObj["Income"].toInt();
     Education=JObj["Education"].toString();
     Age=JObj["Age"].toInt();
+    if(JObj.contains("SelectedCar"))
+        SelectedCarId=JObj["SelectedCar"].toInt();
 
     emit finished();
 }
@@ -179,7 +194,7 @@ void ClientInfo::upLoad()
             .append("&Income=").append(Income)
             .append("&Education=").append(Education)
             .append("&Age=").append(Age);
-    NAM.post(request,QUrl::toEncoded(postData));
+    NAM.post(request,QUrl(postData).toEncoded());
 }
 
 void ClientInfo::read()

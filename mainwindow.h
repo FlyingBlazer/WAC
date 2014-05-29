@@ -2,9 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QNetworkAccessManager>
-
-#include "clientinfo.h"
 
 namespace Ui {
 class MainWindow;
@@ -16,25 +13,17 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
-
     ~MainWindow();
 
 private slots:
-    void on_pushButton_clicked();
+    void on_selectButton_clicked();
 
-    void on_pushButton_2_clicked();
+    void on_incomeButton_clicked();
 
-    void on_pushButton_3_clicked();
-
-    void on_pushButton_4_clicked();
-
-    void on_pushButton_5_clicked();
-
-    void on_pushButton_6_clicked();
+    void on_exIncomeButton_clicked();
 
 private:
     Ui::MainWindow *ui;
-
 };
 
 #endif // MAINWINDOW_H

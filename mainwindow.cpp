@@ -1,27 +1,21 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "sampledialog.h"
-#include "sign.h"
-#include "login.h"
-#include "settings.h"
 #include "selectcar.h"
-#include "clientinfo.h"
-#include "showclientinfo.h"
-#include <QDesktopWidget>
-#include <QProcessEnvironment>
-#include <QSettings>
-#include <QDebug>
+#include "settings.h"
+#include "income.h"
+#include "exincome.h"
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    if(QProcessEnvironment::systemEnvironment().value("OS")!=QString("Windows_NT"))
-    {
-        QRect applicationGeometry=QApplication::desktop()->availableGeometry();
-        this->setFixedSize(applicationGeometry.size());
-    }
 }
 
 MainWindow::~MainWindow()
@@ -29,38 +23,36 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_selectButton_clicked()
 {
-    SampleDialog dialog;
-    dialog.exec();
+    QEventLoop loop;
+    SelectCar sc;
+    QNetworkAccessManager NAM;
+    QNetworkRequest request(QUrl(Settings::CarlistPage));
+    NAM.get(request);
+    connect(&NAM,&QNetworkAccessManager::finished,[&loop,&sc,this](QNetworkReply *reply){
+        loop.exit();
+        QJsonObject JObj=QJsonDocument::fromBinaryData(reply->readAll()).object();
+        QJsonArray JArr=JObj["carlist"].toArray();
+        QList<QString> carlist;
+        for(int i=0;i<JArr.size();i++)
+        {
+            carlist.append(JArr[i].toString());
+        }
+        sc.setCarList(carlist);
+    });
+    loop.exec();
+    sc.exec();
 }
 
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::on_incomeButton_clicked()
 {
-    Sign a;
-    a.exec();
+    Income in;
+    in.exec();
 }
 
-void MainWindow::on_pushButton_3_clicked()
+void MainWindow::on_exIncomeButton_clicked()
 {
-    Login a;
-    a.exec();
-}
-
-void MainWindow::on_pushButton_4_clicked()
-{
-    SelectCar a;
-    a.exec();
-}
-
-void MainWindow::on_pushButton_5_clicked()
-{
-    QSettings setting("buaa.GBK","WAC");
-    setting.clear();
-}
-
-void MainWindow::on_pushButton_6_clicked()
-{
-    ShowClientInfo s;
-    s.exec();
+    ExIncome ei;
+    ei.exec();
 }

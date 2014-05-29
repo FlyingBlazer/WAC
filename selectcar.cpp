@@ -53,6 +53,11 @@ int SelectCar::exec()
     return QDialog::exec();
 }
 
+void SelectCar::finished(QNetworkReply *reply)
+{
+    //
+}
+
 void SelectCar::addRecommandCars()
 {
     QNetworkRequest request(QUrl(Settings::RecommandCar));

@@ -54,6 +54,9 @@ public:
 
     void commit();
 
+    int getSelectedCarId() const;
+    void setSelectedCarId(int value);
+
 public slots:
     void refresh();
 
@@ -77,6 +80,7 @@ private:
     int Income;
     int Age;
     int Expense;
+    int SelectedCarId;
 
     QFile Data;
 

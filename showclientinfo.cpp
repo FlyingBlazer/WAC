@@ -9,8 +9,7 @@ ShowClientInfo::ShowClientInfo(QWidget *parent) :
     ui->setupUi(this);
     ClientInfo *a=ClientInfo::getInstance(this);
     ui->NickNameLable->setText(a->getNickname());
-    ui->SexLable->setText(a->getSex());
-    ui->IncomeLable->setText(a->getIncome());
+    ui->IncomeLable->setText(QString::number(a->getIncome()));
     ui->EducationLable->setText(a->getEducation());
 }
 

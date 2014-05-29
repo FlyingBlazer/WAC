@@ -5,4 +5,6 @@
 
 QString getExternalStorageDirectory();
 
+void share(QString str);
+
 #endif // UTILS_H

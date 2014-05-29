@@ -17,3 +17,5 @@ QString Settings::ClientInfoUpLoadPage=Settings::Domain+"/setinfo";
 QString Settings::CarDetailpage=Settings::Domain+"/cardetail";
 
 QString Settings::RecommandCar=Settings::Domain+"/getAffordableCars";
+
+QString Settings::CarlistPage=Settings::Domain+"/carlist";

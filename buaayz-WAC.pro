@@ -15,7 +15,6 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
     sampledialog.cpp \
     sign.cpp \
     settings.cpp \
@@ -29,9 +28,11 @@ SOURCES += main.cpp\
     selectitem.cpp \
     selectwidget.cpp \
     cardetail.cpp \
-    daylyrecord.cpp
+    mainwindow.cpp \
+    income.cpp \
+    exincome.cpp
 
-HEADERS  += mainwindow.h \
+HEADERS  += \
     sampledialog.h \
     sign.h \
     login.h \
@@ -45,9 +46,11 @@ HEADERS  += mainwindow.h \
     selectitem.h \
     selectwidget.h \
     cardetail.h \
-    daylyrecord.h
+    mainwindow.h \
+    income.h \
+    exincome.h
 
-FORMS    += mainwindow.ui \
+FORMS    += \
     sampledialog.ui \
     sign.ui \
     login.ui \
@@ -56,7 +59,9 @@ FORMS    += mainwindow.ui \
     showclientinfo.ui \
     selectitem.ui \
     cardetail.ui \
-    daylyrecord.ui
+    mainwindow.ui \
+    income.ui \
+    exincome.ui
 
 CONFIG += mobility c++11
 MOBILITY = 
