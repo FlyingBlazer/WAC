@@ -11,11 +11,14 @@
 #include <QAction>
 #include <QMouseEvent>
 
-SelectItem::SelectItem(QString id, QWidget *parent) :
-    QWidget(parent),ui(new Ui::SelectItem),id(id),
-    detail(new CarDetail(this))
+SelectItem::SelectItem(int id, QString name, double price, int day, QWidget *parent) :
+    QWidget(parent),ui(new Ui::SelectItem),id(id)
 {
     ui->setupUi(this);
+    ui->NameLable->setText(name);
+    ui->price->setText("售价："+QString::number(price)+"万人民币");
+    ui->time->setText("您还需"+QString::number(day)+"天可以购买");
+    connect(ui->SelectButton,&QPushButton::clicked,this,&SelectItem::select);
 }
 
 SelectItem::~SelectItem()
@@ -25,54 +28,32 @@ SelectItem::~SelectItem()
 
 void SelectItem::mousePressEvent(QMouseEvent *e)
 {
-    if(e->buttons().testFlag(Qt::LeftButton))
-    {
-        PressTime=QTime::currentTime();
-    }
+//    if(e->buttons().testFlag(Qt::LeftButton))
+//    {
+//        PressTime=QTime::currentTime();
+//    }
 }
 
 void SelectItem::mouseReleaseEvent(QMouseEvent *e)
 {
-    if(e->buttons().testFlag(Qt::LeftButton))
-    {
-        if(PressTime.secsTo(QTime::currentTime()))
-        {
-            detail->setId(id.toLong());
-            connect(detail,&CarDetail::accepted,static_cast<QWidget *>(this->parent()),&QWidget::close);
-            detail->exec();
-        }
-    }
+//    if(e->buttons().testFlag(Qt::LeftButton))
+//    {
+//        if(PressTime.secsTo(QTime::currentTime())<1)
+//        {
+//            detail->setId(id.toLong());
+//            connect(detail,&CarDetail::accepted,static_cast<QWidget *>(this->parent()),&QWidget::close);
+//            detail->exec();
+//        }
+//    }
 }
 
-void SelectItem::load()
+void SelectItem::select()
 {
-    QNetworkRequest request(QUrl(Settings::CarDetailpage+"?id="+id));
-    NAM.get(request);
-    connect(&NAM,&QNetworkAccessManager::finished,this,&SelectItem::onLoaded);
+    emit selected(id);
 }
 
-void SelectItem::onLoaded(QNetworkReply *r)
+void SelectItem::on_DetailButton_clicked()
 {
-    disconnect(&NAM,0,0,0);
-    QString ImageUrl;
-    QByteArray reply=r->readAll();
-    r->deleteLater();
-    QJsonObject JObj=QJsonDocument::fromJson(reply).object();
-    ImageUrl=JObj["Image"].toString();
-    ui->NameLable->setText(JObj["Name"].toString());
-    ui->DescriptionLabel->setText(JObj["Description"].toString());
-    ui->DetailLable1->setText(JObj["Detail1"].toString());
-    ui->DetailLable2->setText(JObj["Detail2"].toString());
-    ui->DetailLable3->setText(JObj["Detail3"].toString());
-    QNetworkRequest request(ImageUrl);
-    NAM.get(request);
-    connect(&NAM,&QNetworkAccessManager::finished,this,&SelectItem::onImageLoaded);
-}
-
-void SelectItem::onImageLoaded(QNetworkReply *r)
-{
-    disconnect(&NAM,0,0,0);
-    pix.loadFromData(r->readAll());
-    r->deleteLater();
-    ui->ImageLable->setPixmap(pix);
+    CarDetail d(id,this);
+    d.exec();
 }

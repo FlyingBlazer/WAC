@@ -23,14 +23,14 @@ SOURCES += main.cpp\
     utils.cpp \
     clientinfocollector.cpp \
     selectcar.cpp \
-    showclientinfo.cpp \
     touchablescrollarea.cpp \
     selectitem.cpp \
     selectwidget.cpp \
     cardetail.cpp \
     mainwindow.cpp \
     income.cpp \
-    exincome.cpp
+    exincome.cpp \
+    priceattention.cpp
 
 HEADERS  += \
     sampledialog.h \
@@ -41,14 +41,14 @@ HEADERS  += \
     utils.h \
     clientinfocollector.h \
     selectcar.h \
-    showclientinfo.h \
     touchablescrollarea.h \
     selectitem.h \
     selectwidget.h \
     cardetail.h \
     mainwindow.h \
     income.h \
-    exincome.h
+    exincome.h \
+    priceattention.h
 
 FORMS    += \
     sampledialog.ui \
@@ -56,12 +56,12 @@ FORMS    += \
     login.ui \
     clientinfocollector.ui \
     selectcar.ui \
-    showclientinfo.ui \
     selectitem.ui \
     cardetail.ui \
     mainwindow.ui \
     income.ui \
-    exincome.ui
+    exincome.ui \
+    priceattention.ui
 
 CONFIG += mobility c++11
 MOBILITY = 

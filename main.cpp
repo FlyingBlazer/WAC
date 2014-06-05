@@ -3,11 +3,12 @@
 #include "clientinfocollector.h"
 #include "login.h"
 #include <QApplication>
+#include <QtDebug>
 
 bool checkLoginState()
 {
     ClientInfo *client=ClientInfo::getInstance();
-    return client->getLoginState()==ClientInfo::HasLogin;
+    return (client->getLoginState()==ClientInfo::HasLogin);
 }
 
 int main(int argc, char *argv[])
@@ -18,8 +19,12 @@ int main(int argc, char *argv[])
         Login login;
         login.exec();
     }
-    if(!checkLoginState()) a.quit();
-    MainWindow mw;
-    mw.show();
-    return a.exec();
+    if(checkLoginState())
+    {
+        MainWindow mw;
+        mw.show();
+        return a.exec();
+    } else {
+        return 0;
+    }
 }

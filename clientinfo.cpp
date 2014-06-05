@@ -1,11 +1,13 @@
 #include "clientinfo.h"
 #include "clientinfocollector.h"
+#include <QEventLoop>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QNetworkRequest>
 #include <QMessageBox>
 #include <QDir>
 #include <QUrl>
+#include <QtDebug>
 
 ClientInfo *ClientInfo::Instance=0;
 
@@ -22,6 +24,7 @@ ClientInfo *ClientInfo::newClient(QString username, QString email, QString token
     if(Instance!=0)
         delete Instance;
     Instance=new ClientInfo(parent);
+    Instance->State=HasLogin;
     Instance->Name=username;
     Instance->Email=email;
     Instance->Token=token;
@@ -29,7 +32,6 @@ ClientInfo *ClientInfo::newClient(QString username, QString email, QString token
         Instance->inputClientInfo();
     else
         Instance->refresh();
-    Instance->commit();
     return Instance;
 }
 
@@ -39,8 +41,36 @@ ClientInfo::ClientInfo(QObject *parent) :
     State=NotLogin;
     Nickname="undefined";
     SelectedCarId=-1;
+    SelectedCarPrice=-1.0;
     read();
+    if(State==HasLogin)
+        refresh();
+    connect(this,&ClientInfo::finished,this,&ClientInfo::check);
+    connect(&NAM,&QNetworkAccessManager::finished,this,&ClientInfo::getClientInfo);
+    connect(&NAM,&QNetworkAccessManager::finished,this,&ClientInfo::setSelectedCar);
+    connect(&NAM,&QNetworkAccessManager::finished,this,&ClientInfo::setSelectedCarInfo);
 }
+
+int ClientInfo::getBalance() const
+{
+    return Balance;
+}
+
+void ClientInfo::setBalance(int value)
+{
+    Balance = value;
+}
+
+double ClientInfo::getSelectedCarPrice() const
+{
+    return SelectedCarPrice;
+}
+
+void ClientInfo::setSelectedCarPrice(double value)
+{
+    SelectedCarPrice = value;
+}
+
 int ClientInfo::getSelectedCarId() const
 {
     return SelectedCarId;
@@ -50,7 +80,6 @@ void ClientInfo::setSelectedCarId(int value)
 {
     SelectedCarId = value;
 }
-
 
 int ClientInfo::getAge() const
 {
@@ -153,48 +182,119 @@ void ClientInfo::commit()
     upLoad();
 }
 
-void ClientInfo::refresh()
+void ClientInfo::check()
 {
-    QNetworkAccessManager NAM;
-    QNetworkRequest request(QUrl(Settings::ClientInfoPage));
-    request.setRawHeader("Content-Type","application/x-www-form-urlencoded");
-    QByteArray postData;
-    postData.append("token=").append(Token)
-            .append("&magic=").append(Settings::Magic);
-    NAM.post(request,postData);
-
-    connect(&NAM,&QNetworkAccessManager::finished,this,&ClientInfo::setClientInfo);
+    if(Education.isEmpty())
+    {
+        inputClientInfo();
+    }
 }
 
-void ClientInfo::setClientInfo(QNetworkReply *reply)
+void ClientInfo::income(int inc)
 {
+    Balance+=inc;
+    commit();
+}
+
+void ClientInfo::refresh()
+{
+    QNetworkRequest request1(QUrl(Settings::ClientInfoPage));
+    request1.setRawHeader("Content-Type","application/x-www-form-urlencoded");
+    QByteArray postData1;
+    postData1.append("token=").append(Token).append("&username=").append(Name);
+    postData1=QUrl(postData1).toEncoded();
+    NAM.post(request1,postData1);
+    QNetworkRequest request2(QUrl(Settings::getSelectedCar));
+    request2.setRawHeader("Content-Type","application/x-www-form-urlencoded");
+    QByteArray postData2;
+    postData2.append("token=").append(Token).append("&username=").append(Name);
+    postData2=QUrl(postData2).toEncoded();
+    NAM.post(request2,postData2);
+}
+
+void ClientInfo::getClientInfo(QNetworkReply *reply)
+{
+    if(reply->request().url().toString().compare(Settings::ClientInfoPage)!=0)
+        return;
+    QByteArray raw=reply->readAll();
+    qDebug() << raw;
+    QJsonObject JObj=QJsonDocument::fromJson(raw).object();
+    if(JObj["status"].toString()=="fail")
+    {
+        QMessageBox::warning(0,QString("错误"),JObj["msg"].toString());
+        return;
+    }
+    Email=JObj["email"].toString();
+    Nickname=JObj["nickname"].toString();
+    Gender=JObj["gender"].toBool();
+    Income=JObj["income"].toInt();
+    Education=JObj["education"].toString();
+    Age=JObj["age"].toInt();
+    Balance=JObj["balance"].toInt();
+    save();
+    emit finished();
+}
+
+void ClientInfo::setSelectedCar(QNetworkReply *reply)
+{
+    if(reply->request().url().toString().compare(Settings::getSelectedCar)!=0)
+        return;
     QByteArray raw=reply->readAll();
     QJsonObject JObj=QJsonDocument::fromJson(raw).object();
-    Email=JObj["Email"].toString();
-    Nickname=JObj["Nickname"].toString();
-    Gender=JObj["Gender"].toBool();
-    Income=JObj["Income"].toInt();
-    Education=JObj["Education"].toString();
-    Age=JObj["Age"].toInt();
-    if(JObj.contains("SelectedCar"))
-        SelectedCarId=JObj["SelectedCar"].toInt();
+    if(JObj["status"].toString()=="fail")
+    {
+        QMessageBox::warning(0,QString("错误"),JObj["msg"].toString());
+        return;
+    }
+    SelectedCarId=JObj["target"].toInt();
+    QNetworkRequest request3(QUrl(Settings::CarDetailpage));
+    request3.setRawHeader("Content-Type","application/x-www-form-urlencoded");
+    QByteArray postData3;
+    postData3.append("id=").append(QString::number(SelectedCarId));
+    postData3=QUrl(postData3).toEncoded();
+    NAM.post(request3,postData3);
+}
 
-    emit finished();
+void ClientInfo::setSelectedCarInfo(QNetworkReply *reply)
+{
+    if(reply->request().url().toString().compare(Settings::CarDetailpage)!=0)
+        return;
+    QByteArray raw=reply->readAll();
+    QJsonObject JObj=QJsonDocument::fromJson(raw).object();
+    if(JObj["status"].toString()=="fail")
+    {
+        QMessageBox::warning(0,QString("错误"),JObj["msg"].toString());
+        return;
+    }
+    SelectedCarPrice=JObj["info"].toObject().value("price").toDouble();
+    save();
+    emit infogot();
 }
 
 void ClientInfo::upLoad()
 {
-    QNetworkAccessManager NAM;
-    QNetworkRequest request(QUrl(Settings::ClientInfoUpLoadPage));
-    request.setRawHeader("Content-Type","application/x-www-form-urlencoded");
-    QByteArray postData;
-    postData.append("token=").append(Token)
-            .append("&Nickname=").append(Nickname)
-            .append("&Gender=").append(Gender)
-            .append("&Income=").append(Income)
-            .append("&Education=").append(Education)
-            .append("&Age=").append(Age);
-    NAM.post(request,QUrl(postData).toEncoded());
+    QNetworkRequest request1(QUrl(Settings::ClientInfoUpLoadPage));
+    request1.setRawHeader("Content-Type","application/x-www-form-urlencoded");
+    QByteArray postData1;
+    postData1.append("token=").append(Token)
+            .append("&username=").append(Name)
+            .append("&nickname=").append(Nickname)
+            .append("&gender=").append(Gender?"1":"0")
+            .append("&income=").append(QString::number(Income))
+            .append("&balance=").append(QString::number(Balance))
+            .append("&expense=").append("0")
+            .append("&education=").append(Education)
+            .append("&age=").append(QString::number(Age));
+    postData1=QUrl(postData1).toEncoded();
+    NAM.post(request1,postData1);
+    QNetworkRequest request2(QUrl(Settings::setSelectedCar));
+    request2.setRawHeader("Content-Type","application/x-www-form-urlencoded");
+    QByteArray postData2;
+    postData2.append("token=").append(Token)
+            .append("&username=").append(Name)
+            .append("&target=").append(QString::number(SelectedCarId));
+    postData2=QUrl(postData2).toEncoded();
+    NAM.post(request2,postData2);
 }
 
 void ClientInfo::read()
@@ -208,8 +308,11 @@ void ClientInfo::read()
         Token=setting.value("Token").toString();
         Gender=setting.value("Gender").toBool();
         Income=setting.value("Income").toInt();
+        Balance=setting.value("Balance").toInt();
         Education=setting.value("Education").toString();
         Age=setting.value("Age").toInt();
+        SelectedCarId=setting.value("SelectedCarId").toInt();
+        SelectedCarPrice=setting.value("SelectedCarPrice").toDouble();
         State=HasLogin;
     }
     setting.endGroup();
@@ -219,24 +322,39 @@ void ClientInfo::save()
 {
     setting.beginGroup("ClientInfo");
     setting.setValue("Name",Name);
+    setting.setValue("Age",Age);
     setting.setValue("Email",Email);
     setting.setValue("Nickname",Nickname);
     setting.setValue("Token",Token);
+    setting.setValue("Balance",Balance);
     setting.setValue("Gender",Gender);
     setting.setValue("Income",Income);
     setting.setValue("Education",Education);
+    setting.setValue("SelectedCarId",SelectedCarId);
+    setting.setValue("SelectedCarPrice",SelectedCarPrice);
     setting.endGroup();
 }
 
 void ClientInfo::inputClientInfo()
 {
     ClientInfoCollector cic;
-    connect(&cic,&ClientInfoCollector::data,[this](QString nickname,bool Gender,int income,QString education,int age){
-        Nickname=nickname;
-        Gender=Gender;
-        Income=income;
-        Education=education;
-        Age=age;
-    });
+    connect(&cic,&ClientInfoCollector::data,this,&ClientInfo::setInfo);
     cic.exec();
+}
+
+void ClientInfo::setInfo(QString nickname,bool gender,int income,QString education,int age)
+{
+    qDebug("signal recieved");
+    Nickname=nickname;
+    Gender=gender;
+    Income=income;
+    Education=education;
+    Age=age;
+    commit();
+}
+
+void ClientInfo::selectCar(int id)
+{
+    SelectedCarId=id;
+    commit();
 }

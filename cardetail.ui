@@ -1,18 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>CarDetail</class>
- <widget name="CarDetail" class="QDialog">
+ <widget class="QDialog" name="CarDetail">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>391</width>
+    <height>518</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QListWidget" name="listWidget"/>
+   </item>
+   <item>
+    <widget class="QPushButton" name="Back">
+     <property name="text">
+      <string>返回</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>Back</sender>
+   <signal>clicked()</signal>
+   <receiver>CarDetail</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>195</x>
+     <y>497</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>195</x>
+     <y>258</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

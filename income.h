@@ -15,6 +15,9 @@ public:
     explicit Income(QWidget *parent = 0);
     ~Income();
 
+private slots:
+    void on_acceptButton_clicked();
+
 private:
     Ui::Income *ui;
 };

@@ -17,28 +17,27 @@ class SelectItem : public QWidget
     Q_OBJECT
 
 public:
-    SelectItem(QString id, QWidget *parent = 0);
+    SelectItem(int id, QString name, double price, int day, QWidget *parent = 0);
     ~SelectItem();
 
 signals:
-    void selected();
+    void selected(int);
 
 protected:
     void mousePressEvent(QMouseEvent *);
     void mouseReleaseEvent(QMouseEvent *);
 
+private slots:
+    void on_DetailButton_clicked();
+
 private:
     Ui::SelectItem *ui;
-    QString id;
+    int id;
     QNetworkAccessManager NAM;
     QPixmap pix;
     QTime PressTime;
-    CarDetail *detail;
-    void load();
+    void select();
 
-private slots:
-    void onLoaded(QNetworkReply *);
-    void onImageLoaded(QNetworkReply *);
 };
 
 #endif // SELECTITEM_H

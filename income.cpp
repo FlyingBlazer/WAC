@@ -1,5 +1,6 @@
 #include "income.h"
 #include "ui_income.h"
+#include "clientinfo.h"
 
 Income::Income(QWidget *parent) :
     QDialog(parent),
@@ -11,4 +12,11 @@ Income::Income(QWidget *parent) :
 Income::~Income()
 {
     delete ui;
+}
+
+void Income::on_acceptButton_clicked()
+{
+    ClientInfo *ci=ClientInfo::getInstance();
+    ci->income(ui->incomeEdit->text().toInt());
+    accept();
 }

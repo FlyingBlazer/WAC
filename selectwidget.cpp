@@ -1,16 +1,14 @@
 #include "selectwidget.h"
 #include "selectitem.h"
 #include <QLayout>
-#include <QVBoxLayout>
+#include <QtDebug>
 
-SelectWidget::SelectWidget(QWidget *parent) :
+SelectWidget::SelectWidget(QList<SelectItem *> items, QWidget *parent) :
     QWidget(parent)
 {
-    setLayout(new QVBoxLayout());
-}
-
-void SelectWidget::addItem(QString id)
-{
-    SelectItem *item=new SelectItem(id,this);
-    layout()->addWidget(item);
+    lay=new QVBoxLayout(this);
+    setLayout(lay);
+    foreach(SelectItem *item, items) {
+        lay->addWidget(item);
+    }
 }

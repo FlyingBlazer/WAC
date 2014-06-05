@@ -3,6 +3,17 @@
 #ifndef WINVER
 #include <QAndroidJniObject>
 #include <QtAndroid>
+#include <QAndroidJniEnvironment>
+#include <QtDebug>
+
+QAndroidJniObject View;
+QAndroidJniObject MIME;
+QAndroidJniObject Subject;
+QAndroidJniObject Text;
+QAndroidJniObject Name;
+QAndroidJniObject Str;
+QAndroidJniObject intent("android/content/Intent");
+QAndroidJniObject intent2;
 #endif
 
 QString getExternalStorageDirectory()
@@ -21,20 +32,24 @@ QString getExternalStorageDirectory()
 void share(QString str)
 {
 #ifndef WINVER
-    QAndroidJniObject intent("android/content/Intent");
-    intent.callObjectMethod("addAction","(Ljava/lang/String;)Landroid/content/Intent;",
-                            QAndroidJniObject::fromString("android.intent.action.VIEW"));
-    intent.callObjectMethod("setType","(Ljava/lang/String;)Landroid/content/Intent;",
-                            QAndroidJniObject::fromString("image/*"));
+    View = QAndroidJniObject::fromString("android.intent.action.VIEW");
+    MIME = QAndroidJniObject::fromString("text/plain");
+    Subject = QAndroidJniObject::fromString("android.intent.extra.SUBJECT");
+    Text = QAndroidJniObject::fromString("android.intent.extra.TEXT");
+    Name = QAndroidJniObject::fromString("分享");
+    Str = QAndroidJniObject::fromString(str);
+    intent.callObjectMethod("addAction","(Ljava/lang/String;)Landroid/content/Intent;",View.object<jstring>());
+    intent.callObjectMethod("setType","(Ljava/lang/String;)Landroid/content/Intent;",MIME.object<jstring>());
+    intent.callObjectMethod("putExtra","(Ljava/lang/String;Ljava/lang/string;)Landroid/content/Intent;",Subject.object<jstring>(),
+                            Name.object<jstring>());
     intent.callObjectMethod("putExtra","(Ljava/lang/String;Ljava/lang/string;)Landroid/content/Intent;",
-                            QAndroidJniObject::fromString("android.intent.extra.SUBJECT"),QAndroidJniObject::fromString("分享"));
-    intent.callObjectMethod("putExtra","(Ljava/lang/String;Ljava/lang/string;)Landroid/content/Intent;",
-                            QAndroidJniObject::fromString("android.intent.extra.TEXT"),QAndroidJniObject::fromString(str));
+                            Text.object<jstring>(),Str.object<jstring>());
     intent.callObjectMethod("setFlags","(I)Landroid/content/Intent;",268435456);
-    QAndroidJniObject intent2 =
-            intent.callObjectMethod("createChooser","(Landroid/content/Intent;Ljava/lang/CharSequence;)Landroid/content/Intent;",
-                                    intent,"Share");
-    QtAndroid::startActivity(intent,123456);
+    intent2 = QAndroidJniObject::callStaticObjectMethod("android/content/Intent","createChooser",
+                            "(Landroid/content/Intent;Ljava/lang/CharSequence;)Landroid/content/Intent;",
+                            intent.object<jobject>(),Name.object<jstring>());
+    QtAndroid::startActivity(intent2,123456);
+    qDebug() << "end";
 #else
     return;
 #endif

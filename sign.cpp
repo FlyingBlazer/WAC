@@ -39,9 +39,9 @@ QByteArray Sign::signUp(const QString &username,const QString &password,const QS
     QByteArray postData;
     postData.append("username=").append(username).append("&password=")
             .append(QCryptographicHash::hash(password.toLatin1(),QCryptographicHash::Md5))
-            .append("&email=").append(email).append("&magic=").append(Settings::Magic);
-
-    NAM.post(request,postData);
+            .append("&email=").append(email);
+    postData=QUrl(postData).toEncoded();
+    qDebug() << postData;
 
     QNetworkReply *reply=NAM.post(request,postData);
 
@@ -85,8 +85,6 @@ void Sign::on_acceptButton_clicked()
         return;
     }
     QMessageBox::information(this,"注册成功",JObj["msg"].toString());
-
-    ClientInfo *client=ClientInfo::newClient(username,email,JObj["token"].toString(),true);
 
     emit succeed();
     accept();

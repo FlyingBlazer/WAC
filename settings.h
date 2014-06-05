@@ -12,12 +12,13 @@ public:
     static QString LoginPage;
     static QString LogoutPage;
     static QString SignPage;
-    static QString Magic;
     static QString ClientInfoPage;
     static QString ClientInfoUpLoadPage;
     static QString CarDetailpage;
     static QString RecommandCar;
     static QString CarlistPage;
+    static QString getSelectedCar;
+    static QString setSelectedCar;
 };
 
 #endif // SETTINGS_H

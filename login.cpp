@@ -2,7 +2,7 @@
 #include "ui_login.h"
 #include "settings.h"
 #include "clientinfo.h"
-
+#include "sign.h"
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QMessageBox>
@@ -10,6 +10,8 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QProcessEnvironment>
+#include <QtDebug>
+#include <QUrl>
 
 Login::Login(QWidget *parent) :
     QDialog(parent),
@@ -34,10 +36,9 @@ QByteArray Login::login(QString username, QString password)
     request.setRawHeader("Content-Type","application/x-www-form-urlencoded");
     QByteArray postData;
     postData.append("username=").append(username).append("&password=")
-            .append(QCryptographicHash::hash(password.toLatin1(),QCryptographicHash::Md5))
-            .append("&magic=").append(Settings::Magic);
-
-    NAM.post(request,postData);
+            .append(QCryptographicHash::hash(password.toLatin1(),QCryptographicHash::Md5));
+    postData=QUrl(postData).toEncoded();
+    qDebug() << postData;
 
     QNetworkReply *reply=NAM.post(request,postData);
 
@@ -72,6 +73,15 @@ void Login::on_loginButton_clicked()
         return;
     } else {
         ClientInfo::newClient(username,QString(),JObj["token"].toString());
-        QMessageBox::information(this,"登陆成功",JObj["token"].toString());
+        qDebug() << JObj["token"].toString();
     }
+    accept();
+}
+
+void Login::on_pushButton_clicked()
+{
+    this->close();
+    this->deleteLater();
+    Sign s;
+    s.exec();
 }

@@ -20,13 +20,14 @@ public:
     explicit SelectCar(QWidget *parent = 0);
     ~SelectCar();
 
-    QList<QString> getCarList() const;
-    void setCarList(const QList<QString> &value);
-
     int exec();
 
+public slots:
+    void select(int);
+
 signals:
-    void selected(long);
+    void selected(int);
+    void finish(int);
 
 private:
     Ui::SelectCar *ui;
@@ -34,6 +35,7 @@ private:
     QList<QString> CarList;
     QNetworkAccessManager NAM;
     void addRecommandCars();
+    void fetchCarList();
 
 private slots:
     void finished(QNetworkReply *);

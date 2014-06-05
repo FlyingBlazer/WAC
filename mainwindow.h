@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "clientinfo.h"
 
 namespace Ui {
 class MainWindow;
@@ -22,8 +23,14 @@ private slots:
 
     void on_exIncomeButton_clicked();
 
+    void showPriceAttention(int x);
+
+    void infogot();
+
 private:
     Ui::MainWindow *ui;
+    void checkPrice();
+    ClientInfo *ci;
 };
 
 #endif // MAINWINDOW_H

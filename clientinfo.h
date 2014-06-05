@@ -57,13 +57,25 @@ public:
     int getSelectedCarId() const;
     void setSelectedCarId(int value);
 
+    double getSelectedCarPrice() const;
+    void setSelectedCarPrice(double value);
+
+    void check();
+    void income(int);
+
+    int getBalance() const;
+    void setBalance(int value);
+
 public slots:
     void refresh();
+    void selectCar(int);
 
 signals:
     void finished();
+    void infogot();
 
 private:
+    QNetworkAccessManager NAM;
     static ClientInfo *Instance;
 
     ClientInfo(QObject *parent = 0);
@@ -81,6 +93,8 @@ private:
     int Age;
     int Expense;
     int SelectedCarId;
+    double SelectedCarPrice;
+    int Balance;
 
     QFile Data;
 
@@ -90,7 +104,10 @@ private:
     void inputClientInfo();
 
 private slots:
-    void setClientInfo(QNetworkReply *);
+    void getClientInfo(QNetworkReply *);
+    void setInfo(QString nickname,bool gender,int income,QString education,int age);
+    void setSelectedCar(QNetworkReply *);
+    void setSelectedCarInfo(QNetworkReply *);
 };
 
 #endif // CLIENTINFO_H
