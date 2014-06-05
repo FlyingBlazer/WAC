@@ -148,10 +148,18 @@
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QLineEdit" name="passwordEdit"/>
+      <widget class="QLineEdit" name="passwordEdit">
+       <property name="echoMode">
+        <enum>QLineEdit::Password</enum>
+       </property>
+      </widget>
      </item>
      <item row="4" column="1">
-      <widget class="QLineEdit" name="confirmPasswordEdit"/>
+      <widget class="QLineEdit" name="confirmPasswordEdit">
+       <property name="echoMode">
+        <enum>QLineEdit::Password</enum>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
