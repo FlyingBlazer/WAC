@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <touchablescrollarea.h>
 
 namespace Ui {
 class CarDetail;
@@ -25,6 +26,7 @@ private:
     long id;
     QNetworkAccessManager NAM;
     void finished(QNetworkReply *);
+    TouchableScrollArea *panel;
 };
 
 #endif // CARDETAIL_H

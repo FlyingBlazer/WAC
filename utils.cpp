@@ -16,19 +16,6 @@ QAndroidJniObject intent("android/content/Intent");
 QAndroidJniObject intent2;
 #endif
 
-QString getExternalStorageDirectory()
-{
-#ifndef WINVER
-    QAndroidJniObject File=QAndroidJniObject::callStaticObjectMethod(
-            "android/os/Environment","getExternalStorageDirectory",
-            "()Ljava/io/File;");
-    QAndroidJniObject Dir=File.callObjectMethod("toString","()Ljava/lang/String;");
-    return Dir.toString();
-#else
-    return QString();
-#endif
-}
-
 void share(QString str)
 {
 #ifndef WINVER

@@ -13,12 +13,19 @@
 #include <QJsonArray>
 #include <QPushButton>
 #include <QtDebug>
+#include <QDesktopWidget>
+#include <QProcessEnvironment>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    if(QProcessEnvironment::systemEnvironment().value("OS")!=QString("Windows_NT"))
+    {
+        QRect applicationGeometry=QApplication::desktop()->availableGeometry();
+        this->setFixedSize(applicationGeometry.size());
+    }
     ci=ClientInfo::getInstance();
     connect(ci,&ClientInfo::infogot,this,&MainWindow::infogot);
 }
@@ -41,8 +48,8 @@ void MainWindow::infogot()
     int dayincome=ci->getIncome()/30;
     int had=ci->getBalance();
     ui->lcdNumber->display((price-had)/dayincome);
-    ui->lcdNumber_2->display(had/price);
-    qDebug() << (price-had)/dayincome << endl << had/price;
+    ui->lcdNumber_2->display((int)(100*had/price));
+    qDebug() << price << endl << had << endl << dayincome;
 }
 
 void MainWindow::on_selectButton_clicked()

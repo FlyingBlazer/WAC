@@ -66,6 +66,9 @@ public:
     int getBalance() const;
     void setBalance(int value);
 
+    double getLastSelectedCarPrice() const;
+    void setLastSelectedCarPrice(double value);
+
 public slots:
     void refresh();
     void selectCar(int);
@@ -94,6 +97,7 @@ private:
     int Expense;
     int SelectedCarId;
     double SelectedCarPrice;
+    double lastSelectedCarPrice;
     int Balance;
 
     QFile Data;

@@ -6,11 +6,25 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QMessageBox>
+#include <QDesktopWidget>
+#include <QProcessEnvironment>
+#include <QVBoxLayout>
+#include <QLabel>
 
 CarDetail::CarDetail(int id, QWidget *parent) :
     QDialog(parent),id(id),ui(new Ui::CarDetail)
 {
     ui->setupUi(this);
+    if(QProcessEnvironment::systemEnvironment().value("OS")!=QString("Windows_NT"))
+    {
+        QRect applicationGeometry=QApplication::desktop()->availableGeometry();
+        this->setFixedSize(applicationGeometry.size());
+    }
+    panel=new TouchableScrollArea(this);
+    ui->verticalLayout->insertWidget(0,panel);
+    QWidget *w=new QWidget(panel);
+    w->setFixedWidth(panel->width());
+    panel->setWidget(w);
     QNetworkRequest request(QUrl(Settings::CarDetailpage));
     QByteArray data;
     data.append("id=").append(QString::number(id));
@@ -35,6 +49,10 @@ void CarDetail::setId(long value)
 
 void CarDetail::finished(QNetworkReply *r)
 {
+    QWidget *w = new QWidget(this);
+    w->setFixedWidth(panel->width()-30);
+    QVBoxLayout *lay=new QVBoxLayout();
+    w->setLayout(lay);
     QByteArray raw=r->readAll();
     QJsonObject JObj=QJsonDocument::fromJson(raw).object();
     if(JObj["status"].toString()=="fail")
@@ -43,10 +61,11 @@ void CarDetail::finished(QNetworkReply *r)
         return;
     }
     QJsonObject info=JObj["info"].toObject();
-    QStringList stl;
+    QLabel *l;
     foreach(QString key,info.keys())
     {
-        stl.append(key+":"+info.value(key).toString());
+        l=new QLabel(key+":"+info.value(key).toString());
+        lay->addWidget(l);
     }
-    ui->listWidget->addItems(stl);
+    panel->setWidget(w);
 }

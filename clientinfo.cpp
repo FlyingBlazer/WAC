@@ -1,5 +1,6 @@
 #include "clientinfo.h"
 #include "clientinfocollector.h"
+#include "priceattention.h"
 #include <QEventLoop>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -44,11 +45,38 @@ ClientInfo::ClientInfo(QObject *parent) :
     SelectedCarPrice=-1.0;
     read();
     if(State==HasLogin)
-        refresh();
+    {
+        QNetworkAccessManager nnn;
+        QNetworkRequest req(QUrl(Settings::ClientInfoPage));
+        QByteArray data;
+        data.append("username=").append(Name).append("&token=").append(Token);
+        QNetworkReply *reply=nnn.post(req,data);
+        QEventLoop loop;
+        connect(reply,&QNetworkReply::finished,[&loop](){
+            loop.exit();
+        });
+        loop.exec();
+        QJsonObject JObj=QJsonDocument::fromJson(reply->readAll()).object();
+        if(JObj["status"]!="ok") {
+            State=NotLogin;
+        } else {
+            refresh();
+        }
+    }
     connect(this,&ClientInfo::finished,this,&ClientInfo::check);
     connect(&NAM,&QNetworkAccessManager::finished,this,&ClientInfo::getClientInfo);
     connect(&NAM,&QNetworkAccessManager::finished,this,&ClientInfo::setSelectedCar);
     connect(&NAM,&QNetworkAccessManager::finished,this,&ClientInfo::setSelectedCarInfo);
+}
+
+double ClientInfo::getLastSelectedCarPrice() const
+{
+    return lastSelectedCarPrice;
+}
+
+void ClientInfo::setLastSelectedCarPrice(double value)
+{
+    lastSelectedCarPrice = value;
 }
 
 int ClientInfo::getBalance() const
@@ -257,6 +285,7 @@ void ClientInfo::setSelectedCar(QNetworkReply *reply)
 
 void ClientInfo::setSelectedCarInfo(QNetworkReply *reply)
 {
+    lastSelectedCarPrice=SelectedCarPrice;
     if(reply->request().url().toString().compare(Settings::CarDetailpage)!=0)
         return;
     QByteArray raw=reply->readAll();
@@ -269,6 +298,10 @@ void ClientInfo::setSelectedCarInfo(QNetworkReply *reply)
     SelectedCarPrice=JObj["info"].toObject().value("price").toDouble();
     save();
     emit infogot();
+    if(lastSelectedCarPrice>0 && lastSelectedCarPrice<SelectedCarPrice) {
+        PriceAttention pa((int)((SelectedCarPrice-lastSelectedCarPrice)*10000));
+        pa.exec();
+    }
 }
 
 void ClientInfo::upLoad()
@@ -295,6 +328,8 @@ void ClientInfo::upLoad()
             .append("&target=").append(QString::number(SelectedCarId));
     postData2=QUrl(postData2).toEncoded();
     NAM.post(request2,postData2);
+
+    refresh();
 }
 
 void ClientInfo::read()

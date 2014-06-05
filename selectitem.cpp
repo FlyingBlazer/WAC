@@ -16,8 +16,8 @@ SelectItem::SelectItem(int id, QString name, double price, int day, QWidget *par
 {
     ui->setupUi(this);
     ui->NameLable->setText(name);
-    ui->price->setText("售价："+QString::number(price)+"万人民币");
-    ui->time->setText("您还需"+QString::number(day)+"天可以购买");
+    ui->price->setText("售价："+QString::number(price)+"万");
+    ui->time->setText("还需"+QString::number(day)+"天购买");
     connect(ui->SelectButton,&QPushButton::clicked,this,&SelectItem::select);
 }
 
@@ -32,6 +32,7 @@ void SelectItem::mousePressEvent(QMouseEvent *e)
 //    {
 //        PressTime=QTime::currentTime();
 //    }
+    QWidget::mousePressEvent(e);
 }
 
 void SelectItem::mouseReleaseEvent(QMouseEvent *e)
@@ -45,6 +46,7 @@ void SelectItem::mouseReleaseEvent(QMouseEvent *e)
 //            detail->exec();
 //        }
 //    }
+    QWidget::mouseReleaseEvent(e);
 }
 
 void SelectItem::select()

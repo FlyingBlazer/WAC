@@ -1,8 +1,6 @@
 #include "touchablescrollarea.h"
 #include <QMouseEvent>
 #include <QScrollBar>
-#include <QProcessEnvironment>
-#include <QDesktopWidget>
 
 TouchableScrollArea::TouchableScrollArea(QWidget *parent) :
     QScrollArea(parent),DecimalX(0),DecimalY(0),Speed(1)
@@ -22,8 +20,7 @@ void TouchableScrollArea::mouseMoveEvent(QMouseEvent *e)
     if((MoveX>0?MoveX:-MoveX)<1)
     {
         DecimalX+=MoveX;
-    } else
-    {
+    } else {
         DecimalX+=MoveX-(int)MoveX;
         this->horizontalScrollBar()->setValue(ValX-(int)MoveX);
         ValX=this->horizontalScrollBar()->value();

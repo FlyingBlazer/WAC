@@ -15,6 +15,9 @@ public:
     explicit PriceAttention(int x,QWidget *parent = 0);
     ~PriceAttention();
 
+private slots:
+    void on_pushButton_clicked();
+
 private:
     Ui::PriceAttention *ui;
 };

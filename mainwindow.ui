@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(255, 255, 255);</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
@@ -42,6 +45,9 @@
       </item>
       <item row="0" column="1">
        <widget class="QLCDNumber" name="lcdNumber">
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
         <property name="digitCount">
          <number>8</number>
         </property>
@@ -106,6 +112,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="selectButton">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 255, 255);</string>
+        </property>
         <property name="text">
          <string>选车</string>
         </property>
@@ -226,6 +235,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="quitButton">
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
         <property name="text">
          <string>退出</string>
         </property>
