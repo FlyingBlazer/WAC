@@ -38,10 +38,10 @@ QByteArray Sign::signUp(const QString &username,const QString &password,const QS
 //                         " (KHTML, like Gecko) Chrome/33.0.1750.146 Safari/537.36");
     QByteArray postData;
     postData.append("username=").append(username).append("&password=")
-            .append(QCryptographicHash::hash(password.toLatin1(),QCryptographicHash::Md5))
+            .append(QCryptographicHash::hash(password.toLocal8Bit(),QCryptographicHash::Md5))
             .append("&email=").append(email);
     postData=QUrl(postData).toEncoded();
-    qDebug() << postData;
+    qDebug(postData.constData());
 
     QNetworkReply *reply=NAM.post(request,postData);
 

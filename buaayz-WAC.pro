@@ -71,6 +71,7 @@ OTHER_FILES += \
     android/res/drawable-ldpi/icon.png \
     android/res/drawable-mdpi/icon.png
 
-RESOURCES +=
+RESOURCES += \
+    resource.qrc
 
 ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android

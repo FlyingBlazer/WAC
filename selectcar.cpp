@@ -17,6 +17,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QEventLoop>
+#include <QtDebug>
 
 SelectCar::SelectCar(QWidget *parent) :
     QDialog(parent),
@@ -31,7 +32,7 @@ SelectCar::SelectCar(QWidget *parent) :
     panel=new TouchableScrollArea(this);
     ui->verticalLayout->insertWidget(0,panel);
     QWidget *w=new QWidget(panel);
-    w->setFixedWidth(panel->width());
+    w->setFixedWidth(this->width());
     panel->setWidget(w);
     connect(&NAM,&QNetworkAccessManager::finished,this,&SelectCar::finished);
 }
@@ -46,7 +47,6 @@ void SelectCar::finished(QNetworkReply *reply)
     QByteArray raw=reply->readAll();
     QJsonObject JObj=QJsonDocument::fromJson(raw).object();
     QJsonArray JArr=JObj["cars"].toArray();
-    int count=0;
     QList<SelectItem *> items;
     foreach (QJsonValue i, JArr) {
         SelectItem *item=new SelectItem(
@@ -58,7 +58,7 @@ void SelectCar::finished(QNetworkReply *reply)
         connect(item,&SelectItem::selected,this,&SelectCar::select);
     }
     SelectWidget *w=new SelectWidget(items,panel);
-    w->setFixedWidth(this->width()-30);
+    w->setFixedWidth(this->width());
     panel->setWidget(w);
     emit finish(0);
 }

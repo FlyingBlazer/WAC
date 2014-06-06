@@ -382,6 +382,7 @@ void ClientInfo::setInfo(QString nickname,bool gender,int income,QString educati
     Income=income;
     Education=education;
     Age=age;
+    Balance=0;
     commit();
 }
 

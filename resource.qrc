@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/">
+        <file>UI/buttonSkin.jpg</file>
+        <file>UI/buttonSkin_Blue.jpg</file>
+        <file>UI/buttonSkin_Grey.jpg</file>
+        <file>UI/buttonSkin_Red.jpg</file>
+        <file>UI/ClientInfoCollector.jpg</file>
+        <file>UI/exincome.jpg</file>
+        <file>UI/income.jpg</file>
+        <file>UI/login.jpg</file>
+        <file>UI/mainwindow.jpg</file>
+        <file>UI/PriceAttention.jpg</file>
+        <file>UI/SelectCar.jpg</file>
+        <file>UI/selectItem.png</file>
+        <file>UI/sign.jpg</file>
+        <file>UI/selectItem.jpg</file>
+    </qresource>
+</RCC>
