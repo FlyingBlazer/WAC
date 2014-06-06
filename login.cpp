@@ -10,7 +10,6 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QProcessEnvironment>
-#include <QtDebug>
 #include <QUrl>
 
 Login::Login(QWidget *parent) :
@@ -38,7 +37,6 @@ QByteArray Login::login(QString username, QString password)
     postData.append("username=").append(username).append("&password=")
             .append(QCryptographicHash::hash(password.toLatin1(),QCryptographicHash::Md5));
     postData=QUrl(postData).toEncoded();
-    qDebug() << postData;
 
     QNetworkReply *reply=NAM.post(request,postData);
 
@@ -73,7 +71,6 @@ void Login::on_loginButton_clicked()
         return;
     } else {
         ClientInfo::newClient(username,QString(),JObj["token"].toString());
-        qDebug() << JObj["token"].toString();
     }
     accept();
 }

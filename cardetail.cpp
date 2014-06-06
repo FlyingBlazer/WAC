@@ -10,6 +10,7 @@
 #include <QProcessEnvironment>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QFrame>
 
 CarDetail::CarDetail(int id, QWidget *parent) :
     QDialog(parent),id(id),ui(new Ui::CarDetail)
@@ -62,10 +63,19 @@ void CarDetail::finished(QNetworkReply *r)
     }
     QJsonObject info=JObj["info"].toObject();
     QLabel *l;
+    QFrame *line;
+    line=new QFrame(w);
+    line->setFrameShape(QFrame::HLine);
+    line->setLineWidth(0);
+    lay->addWidget(line);
     foreach(QString key,info.keys())
     {
-        l=new QLabel(key+":"+info.value(key).toString());
+        l=new QLabel(key+":"+info.value(key).toString(),w);
         lay->addWidget(l);
+        line=new QFrame(w);
+        line->setFrameShape(QFrame::HLine);
+        line->setLineWidth(0);
+        lay->addWidget(line);
     }
     panel->setWidget(w);
 }

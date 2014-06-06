@@ -8,7 +8,6 @@
 #include <QMessageBox>
 #include <QDir>
 #include <QUrl>
-#include <QtDebug>
 
 ClientInfo *ClientInfo::Instance=0;
 
@@ -245,7 +244,6 @@ void ClientInfo::getClientInfo(QNetworkReply *reply)
     if(reply->request().url().toString().compare(Settings::ClientInfoPage)!=0)
         return;
     QByteArray raw=reply->readAll();
-    qDebug() << raw;
     QJsonObject JObj=QJsonDocument::fromJson(raw).object();
     if(JObj["status"].toString()=="fail")
     {
@@ -379,7 +377,6 @@ void ClientInfo::inputClientInfo()
 
 void ClientInfo::setInfo(QString nickname,bool gender,int income,QString education,int age)
 {
-    qDebug("signal recieved");
     Nickname=nickname;
     Gender=gender;
     Income=income;

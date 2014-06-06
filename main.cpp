@@ -3,7 +3,6 @@
 #include "clientinfocollector.h"
 #include "login.h"
 #include <QApplication>
-#include <QtDebug>
 
 bool checkLoginState()
 {

@@ -15,7 +15,6 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-    sampledialog.cpp \
     sign.cpp \
     settings.cpp \
     login.cpp \
@@ -33,7 +32,6 @@ SOURCES += main.cpp\
     priceattention.cpp
 
 HEADERS  += \
-    sampledialog.h \
     sign.h \
     login.h \
     settings.h \
@@ -51,7 +49,6 @@ HEADERS  += \
     priceattention.h
 
 FORMS    += \
-    sampledialog.ui \
     sign.ui \
     login.ui \
     clientinfocollector.ui \

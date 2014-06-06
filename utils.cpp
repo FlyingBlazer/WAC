@@ -4,7 +4,6 @@
 #include <QAndroidJniObject>
 #include <QtAndroid>
 #include <QAndroidJniEnvironment>
-#include <QtDebug>
 
 QAndroidJniObject View;
 QAndroidJniObject MIME;
@@ -36,7 +35,6 @@ void share(QString str)
                             "(Landroid/content/Intent;Ljava/lang/CharSequence;)Landroid/content/Intent;",
                             intent.object<jobject>(),Name.object<jstring>());
     QtAndroid::startActivity(intent2,123456);
-    qDebug() << "end";
 #else
     return;
 #endif

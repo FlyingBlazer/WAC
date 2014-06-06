@@ -16,7 +16,6 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
-#include <QtDebug>
 #include <QEventLoop>
 
 SelectCar::SelectCar(QWidget *parent) :
@@ -45,7 +44,6 @@ SelectCar::~SelectCar()
 void SelectCar::finished(QNetworkReply *reply)
 {
     QByteArray raw=reply->readAll();
-    qDebug(raw.constData());
     QJsonObject JObj=QJsonDocument::fromJson(raw).object();
     QJsonArray JArr=JObj["cars"].toArray();
     int count=0;

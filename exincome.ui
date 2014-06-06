@@ -20,7 +20,7 @@
    <string>Dialog</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(255, 255, 255);</string>
+   <string notr="true">background-color: rgb(248, 248, 248);</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -30,8 +30,8 @@
      </property>
      <property name="sizeHint" stdset="0">
       <size>
-       <width>20</width>
-       <height>61</height>
+       <width>17</width>
+       <height>67</height>
       </size>
      </property>
     </spacer>
@@ -53,8 +53,8 @@
      </property>
      <property name="sizeHint" stdset="0">
       <size>
-       <width>20</width>
-       <height>60</height>
+       <width>17</width>
+       <height>68</height>
       </size>
      </property>
     </spacer>
@@ -110,8 +110,8 @@
      </property>
      <property name="sizeHint" stdset="0">
       <size>
-       <width>20</width>
-       <height>61</height>
+       <width>17</width>
+       <height>67</height>
       </size>
      </property>
     </spacer>

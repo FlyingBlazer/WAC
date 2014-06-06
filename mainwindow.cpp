@@ -12,7 +12,6 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QPushButton>
-#include <QtDebug>
 #include <QDesktopWidget>
 #include <QProcessEnvironment>
 
@@ -43,20 +42,17 @@ void MainWindow::checkPrice()
 
 void MainWindow::infogot()
 {
-    qDebug("Info got!");
     int price=(int)(ci->getSelectedCarPrice()*10000);
     int dayincome=ci->getIncome()/30;
     int had=ci->getBalance();
     ui->lcdNumber->display((price-had)/dayincome);
     ui->lcdNumber_2->display((int)(100*had/price));
-    qDebug() << price << endl << had << endl << dayincome;
 }
 
 void MainWindow::on_selectButton_clicked()
 {
     SelectCar sc;
     connect(&sc,&SelectCar::selected,ci,&ClientInfo::selectCar);
-    qDebug("connected");
     sc.exec();
     disconnect(&sc,&SelectCar::selected,ci,&ClientInfo::selectCar);
 }

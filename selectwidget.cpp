@@ -1,7 +1,6 @@
 #include "selectwidget.h"
 #include "selectitem.h"
 #include <QLayout>
-#include <QtDebug>
 
 SelectWidget::SelectWidget(QList<SelectItem *> items, QWidget *parent) :
     QWidget(parent)
